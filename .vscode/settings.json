@@ -1,0 +1,10 @@
+{
+  "editor.defaultFormatter": "biomejs.biome",
+  "cSpell.words": [
+    "biomejs",
+    "mrleebo"
+  ],
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
+}

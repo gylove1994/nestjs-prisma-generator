@@ -1,0 +1,38 @@
+{
+  "name": "nestjs-prisma-generator",
+  "version": "1.0.0",
+  "description": "A command line tool for nestjs-prisma code generation",
+  "main": "index.js",
+  "scripts": {
+    "lint": "biome check --write ./src",
+    "dev": "nodemon --watch src --ext ts --exec \"rimraf dist && tsc\"",
+    "build": "rimraf dist && tsc"
+  },
+  "bin": {
+    "npg": "./dist/index.js"
+  },
+  "keywords": [
+    "nestjs",
+    "prisma",
+    "generator",
+    "cli"
+  ],
+  "author": "gylove1994",
+  "license": "MIT",
+  "dependencies": {
+    "@angular-devkit/core": "^18.2.5",
+    "@mrleebo/prisma-ast": "^0.12.0",
+    "chalk": "4",
+    "commander": "^12.1.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^11.0.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.2",
+    "@types/fs-extra": "^11.0.4",
+    "nodemon": "^3.1.7",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  }
+}
