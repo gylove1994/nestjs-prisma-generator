@@ -10,7 +10,12 @@
 		"prepublish": "npm run build",
 		"publish": "npm publish --access public"
 	},
-	"files": ["dist", "README.md", "LICENSE", "bin"],
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE",
+		"bin"
+	],
 	"bin": {
 		"npg": "./bin/npg"
 	},
@@ -36,8 +41,7 @@
 		"commander": "^12.1.0",
 		"dotenv": "^16.4.5",
 		"fs-extra": "^11.2.0",
-		"inquirer": "^11.0.2",
-		"rxjs": "^7.8.1"
+		"inquirer": "^11.0.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.2",

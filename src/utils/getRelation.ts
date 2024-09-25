@@ -5,5 +5,5 @@ export function getRelation(model: Model) {
 	const relations = model.properties
 		.filter((v) => v.type === "field" && v.fieldType === typeMap(v.fieldType))
 		.map((v: any) => v.fieldType);
-	return relations;
+	return relations as string[];
 }

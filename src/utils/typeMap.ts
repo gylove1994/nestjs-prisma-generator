@@ -18,3 +18,22 @@ export function typeMap(type: string | Func) {
 			return type;
 	}
 }
+
+export function swaggerTypeMap(type: string | Func) {
+	switch (type) {
+		case "String":
+			return "String";
+		case "Int":
+			return "Number";
+		case "Float":
+			return "Number";
+		case "Boolean":
+			return "Boolean";
+		case "DateTime":
+			return "Date";
+		case "Json":
+			return "Object";
+		default:
+			return type;
+	}
+}

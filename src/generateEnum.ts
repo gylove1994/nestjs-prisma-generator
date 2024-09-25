@@ -24,10 +24,14 @@ export function generateEnum(enumModel: Enum) {
 	return res;
 }
 
-export function generateEnumFile(prisma: Schema, outputPath: string) {
+export function generateEnumFile(
+	prisma: Schema,
+	outputPath: string,
+	dryRun: boolean,
+) {
 	const enumList = prisma.list.filter((item) => item.type === "enum");
 	for (const e of enumList) {
 		const { name, content } = generateEnum(e);
-		mkFile(outputPath, name, content);
+		mkFile(outputPath, name, content, dryRun);
 	}
 }

@@ -1,5 +1,5 @@
 import type { Field } from "@mrleebo/prisma-ast";
-import { typeMap } from "./typeMap";
+import { swaggerTypeMap, typeMap } from "./typeMap";
 import { createdEnumMap } from "../generateEnum";
 
 export function swaggerMap(field: Field) {
@@ -15,7 +15,7 @@ export function swaggerMap(field: Field) {
 			field.optional || true
 		} })\n`;
 	}
-	return `@ApiProperty({ type: ${capitalizedType}, description: "${
+	return `@ApiProperty({ type: ${swaggerTypeMap(field.fieldType)}, description: "${
 		field.comment || ""
 	}", isArray: ${field.array || false}, required: ${
 		field.optional || true
