@@ -14,7 +14,7 @@ NestJS Prisma Generator 是一个用于生成 NestJS 和 Prisma 代码的命令�
 ## 安装
 
 ```bash
-npm install
+npm install @gylove1994/npg -g
 ```
 
 ## 使用方法
@@ -24,7 +24,7 @@ npm install
 你可以使用以下命令来生成代码：
 
 ```bash
-npx @gylove1994/npg
+npg
 ```
 
 根据提示选择你要生成的代码类型、Prisma schema 文件路径和输出目录。
