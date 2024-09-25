@@ -1,75 +1,69 @@
 # NestJS Prisma Generator
 
-## 项目简介
+## Project Overview
 
-NestJS Prisma Generator 是一个用于生成 NestJS 和 Prisma 代码的命令行工具。
+NestJS Prisma Generator is a command-line tool for generating NestJS and Prisma code.
 
-## 功能
+## Features
 
-- 生成实体（Entity）代码
-- 生成枚举（Enum）代码
-- 生成模块（Module）代码
-- 支持生成所有类型的代码
+- Generate Entity code
+- Generate Enum code
+- Generate Module code
+- Support generating all types of code
 
-## 安装
+## Installation
 
 ```bash
 npm install
 ```
 
-## 使用方法
+## Usage
 
-### 生成代码
+### Generating Code
 
-你可以使用以下命令来生成代码：
+You can use the following command to generate code:
 
 ```bash
 npx npg
 ```
 
-根据提示选择你要生成的代码类型、Prisma schema 文件路径和输出目录。
+Follow the prompts to select the type of code you want to generate, the path to your Prisma schema file, and the output directory.
 
-### 命令行选项
+### Command Line Options
 
-你也可以使用命令行选项来生成代码：
+wip
 
-```bash
-npx npg generate <type>
-```
+## Project Structure
 
-其中 `<type>` 可以是 `entity`、`enum`、`module` 或 `all`。
+- `src/index.ts` - Main entry file, defines the behavior of the command-line tool.
+- `src/generateEntity.ts` - Logic for generating entity code.
+- `src/generateEnum.ts` - Logic for generating enum code.
+- `src/utils` - Utility functions, including file operations, type mapping, etc.
 
-## 项目结构
+## Development
 
-- `src/index.ts` - 主入口文件，定义了命令行工具的行为。
-- `src/generateEntity.ts` - 生成实体代码的逻辑。
-- `src/generateEnum.ts` - 生成枚举代码的逻辑。
-- `src/utils` - 工具函数，包括文件操作、类型映射等。
-
-## 开发
-
-### 本地开发
+### Local Development
 
 ```bash
 npm run dev
 ```
 
-### 构建
+### Build
 
 ```bash
 npm run build
 ```
 
-### 代码检查
+### Code Linting
 
 ```bash
 npm run lint
 ```
 
-## 许可证
+## License
 
 [MIT](LICENSE)
 
-## 作者
+## Author
 
 gylove1994
