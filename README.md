@@ -26,7 +26,7 @@ npm install
 You can use the following command to generate code:
 
 ```bash
-npx npg
+npx @gylove1994/npg
 ```
 
 Follow the prompts to select the type of code you want to generate, the path to your Prisma schema file, and the output directory.

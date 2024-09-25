@@ -1,5 +1,5 @@
 {
-	"name": "nestjs-prisma-generator",
+	"name": "@gylove1994/npg",
 	"version": "0.1.0",
 	"description": "A command line tool for nestjs-prisma code generation",
 	"main": "index.js",
@@ -18,9 +18,15 @@
 		"prisma",
 		"generator",
 		"cli",
-		"nestjs-prisma-generator"
+		"nestjs-prisma-generator",
+		"@gylove1994/nestjs-prisma-generator"
 	],
 	"author": "gylove1994",
+	"homepage": "https://github.com/gylove1994/nestjs-prisma-generator",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/gylove1994/nestjs-prisma-generator.git"
+	},
 	"license": "MIT",
 	"dependencies": {
 		"@angular-devkit/core": "^18.2.5",

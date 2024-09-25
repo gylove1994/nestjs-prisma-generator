@@ -24,7 +24,7 @@ npm install
 你可以使用以下命令来生成代码：
 
 ```bash
-npx npg
+npx @gylove1994/npg
 ```
 
 根据提示选择你要生成的代码类型、Prisma schema 文件路径和输出目录。
