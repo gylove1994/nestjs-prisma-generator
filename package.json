@@ -9,6 +9,7 @@
 		"build": "rimraf dist && tsc",
 		"publish": "npm run build && npm publish --access public"
 	},
+	"files": ["dist", "README.md", "LICENSE"],
 	"bin": {
 		"npg": "./dist/index.js"
 	},

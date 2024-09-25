@@ -1,5 +1,7 @@
 # NestJS Prisma Generator
 
+[中文文档](README_CN.md)
+
 ## Project Overview
 
 NestJS Prisma Generator is a command-line tool for generating NestJS and Prisma code.
