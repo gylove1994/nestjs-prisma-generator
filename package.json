@@ -7,11 +7,12 @@
 		"lint": "biome check --write ./src",
 		"dev": "nodemon --watch src --ext ts --exec \"rimraf dist && tsc && cp .env dist\"",
 		"build": "rimraf dist && tsc",
-		"publish": "npm run build && npm publish --access public"
+		"prepublish": "npm run build",
+		"publish": "npm publish --access public"
 	},
-	"files": ["dist", "README.md", "LICENSE"],
+	"files": ["dist", "README.md", "LICENSE", "bin"],
 	"bin": {
-		"npg": "./dist/index.js"
+		"npg": "./bin/npg"
 	},
 	"keywords": [
 		"nestjs",
