@@ -17,7 +17,7 @@
 		"bin"
 	],
 	"bin": {
-		"npg": "./bin/npg"
+		"npg": "bin/npg"
 	},
 	"keywords": [
 		"nestjs",
@@ -31,7 +31,7 @@
 	"homepage": "https://github.com/gylove1994/nestjs-prisma-generator",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/gylove1994/nestjs-prisma-generator.git"
+		"url": "git+https://github.com/gylove1994/nestjs-prisma-generator.git"
 	},
 	"license": "MIT",
 	"dependencies": {
