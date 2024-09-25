@@ -5,9 +5,9 @@ export function importFile(importName: string, useRelativePath = false) {
 		createdEnumMap.has(importName) ||
 		createdEnumMap.has(importName.toUpperCase())
 	) {
-		return `import { ${importName} } from "${useRelativePath ? "@entity/" : ""}${importName}Enum";\n`;
+		return `import { ${importName} } from "${useRelativePath ? "@entity/" : "./"}${importName}Enum";\n`;
 	}
-	return `import { ${importName} } from "${useRelativePath ? "@entity/" : ""}${importName}Entity";\n`;
+	return `import { ${importName} } from "${useRelativePath ? "@entity/" : "./"}${importName}Entity";\n`;
 }
 
 export function importApiProperty() {
