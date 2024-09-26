@@ -8,10 +8,12 @@ NestJS Prisma Generator is a command-line tool for generating NestJS and Prisma 
 
 ## Features
 
-- Generate Entity code
-- Generate Enum code
-- Generate Module code
-- Support generating all types of code
+- Automatically generate Entity code, synchronized with Prisma models
+- Generate Enum code to ensure type safety
+- Create complete Module structures, including controllers, services, and DTOs
+- Support generating all types of code to meet different development needs
+- Generate code structures that comply with NestJS best practices
+- Support custom templates for flexible adaptation to project requirements
 
 ## Installation
 
@@ -37,15 +39,17 @@ wip
 
 ## Project Structure
 
-- `src/index.ts` - Main entry file, defines the behavior of the command-line tool.
-- `src/generateEntity.ts` - Logic for generating entity code.
-- `src/generateEnum.ts` - Logic for generating enum code.
+- `src/index.ts` - Main entry file, defines the core logic of the command-line tool
+- `src/generateEntity.ts` - Module responsible for generating entity code
+- `src/generateEnum.ts` - Handles the logic for generating enum code
+- `src/generateNestModule.ts` - Core code for generating NestJS module structures
+- `src/generateNestController.ts` - Module for creating controller code
+- `src/generateNestDto.ts` - Logic for generating Data Transfer Objects (DTOs)
 - `src/utils` - Utility functions, including file operations, type mapping, etc.
 
 ## Development
 
 ### Local Development
-
 ```bash
 npm run dev
 ```
@@ -69,3 +73,13 @@ npm run lint
 ## Author
 
 gylove1994
+
+## Contribution Guidelines
+
+We welcome and appreciate any form of contribution! If you want to contribute to the project, please follow these steps:
+
+1. Fork this repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
