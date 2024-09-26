@@ -47,7 +47,7 @@ export function generateService(model: Schema) {
 			const modelNameCamelize = strings.camelize(v.name);
 			const modelNameCapitalize = strings.capitalize(modelNameCamelize);
 			return {
-				name: `${modelNameCapitalize}`,
+				name: `${modelNameCamelize}`,
 				content: serviceTemplate
 					.replace(/{_@modelName@_}/g, v.name)
 					.replace(/{_@modelNameCapitalize@_}/g, modelNameCapitalize),

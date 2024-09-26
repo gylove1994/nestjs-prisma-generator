@@ -32,7 +32,7 @@ export function generateEntity(model: Model) {
 		model.name,
 	)} {\n${propertiesContent}}\n`;
 	return {
-		name: `${strings.classify(model.name)}Entity.ts`,
+		name: `${strings.camelize(model.name)}Entity.ts`,
 		content,
 	};
 }
@@ -122,7 +122,10 @@ export function ${entityName}PickType<T extends keyof ${entityName}>(keys: T[]) 
 	const content = `${imports}\n${c}\n${pickTypeFunction}`;
 
 	// 返回生成的文件名和内容
-	return { name: `${entityName}PickTypeEntities.ts`, content };
+	return {
+		name: `${strings.camelize(entityName)}PickTypeEntities.ts`,
+		content,
+	};
 }
 
 export function generatePickEntityFile(

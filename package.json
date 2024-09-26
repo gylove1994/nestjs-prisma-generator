@@ -1,8 +1,8 @@
 {
 	"name": "@gylove1994/npg",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"description": "A command line tool for nestjs-prisma code generation",
-	"main": "index.js",
+	"main": "dist/index.js",
 	"scripts": {
 		"lint": "biome check --write ./src",
 		"dev": "nodemon --watch src --ext ts --exec \"rimraf dist && tsc && cp .env dist\"",

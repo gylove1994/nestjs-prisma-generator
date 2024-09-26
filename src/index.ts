@@ -34,7 +34,7 @@ program
 				type: "list",
 				name: "type",
 				message: "What type of code do you want to generate?",
-				choices: ["entity", "nestModule", "all"],
+				choices: ["entity", "entity-with-pick", "nestModule", "all"],
 				default: process.env.NPG_LIST_DEFAULT || "all",
 			},
 			{
@@ -59,10 +59,13 @@ program
 		]);
 		const schemaFile = await fs.readFile(answers.prismaPath, "utf-8");
 		const prisma = getSchema(schemaFile);
-		if (answers.type === "entity") {
+		if (answers.type === "entity-with-pick") {
 			generateEnumFile(prisma, answers.outputPath, answers.dryRun);
 			generateEntityFile(prisma, answers.outputPath, answers.dryRun);
 			generatePickEntityFile(prisma, answers.outputPath, answers.dryRun);
+		} else if (answers.type === "entity") {
+			generateEnumFile(prisma, answers.outputPath, answers.dryRun);
+			generateEntityFile(prisma, answers.outputPath, answers.dryRun);
 		} else if (answers.type === "nestModule") {
 			generateNestModuleFile(prisma, answers.outputPath, answers.dryRun);
 			generateNestControllerFile(prisma, answers.outputPath, answers.dryRun);

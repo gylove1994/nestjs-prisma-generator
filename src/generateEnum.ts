@@ -17,7 +17,7 @@ export function generateEnum(enumModel: Enum) {
 		enumModel.name,
 	)} {\n${enumContent.map((v) => `${v.name} = "${v.name}"`).join(",\n")}\n}`;
 	const res = {
-		name: `${strings.classify(enumModel.name)}Enum.ts`,
+		name: `${strings.camelize(enumModel.name)}Enum.ts`,
 		content,
 	};
 	createdEnumMap.set(enumModel.name, res);
