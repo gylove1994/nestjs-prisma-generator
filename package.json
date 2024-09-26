@@ -37,7 +37,7 @@
 	"dependencies": {
 		"@angular-devkit/core": "^18.2.5",
 		"@mrleebo/prisma-ast": "^0.12.0",
-		"chalk": "4",
+		"chalk": "5",
 		"commander": "^12.1.0",
 		"dotenv": "^16.4.5",
 		"fs-extra": "^11.2.0",
