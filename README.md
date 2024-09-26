@@ -1,5 +1,8 @@
 # NestJS Prisma Generator
 
+![NPM Version](https://img.shields.io/npm/v/%40gylove1994%2Fnpg?style=flat)
+
+
 [中文文档](README_CN.md)
 
 ## Project Overview

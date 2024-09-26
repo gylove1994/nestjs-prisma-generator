@@ -1,5 +1,7 @@
 # NestJS Prisma Generator
 
+![NPM Version](https://img.shields.io/npm/v/%40gylove1994%2Fnpg?style=flat)
+
 ## 项目简介
 
 NestJS Prisma Generator 是一个用于生成 NestJS 和 Prisma 代码的命令行工具。
