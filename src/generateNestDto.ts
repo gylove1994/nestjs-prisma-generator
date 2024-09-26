@@ -3,7 +3,7 @@ import type { Model, Schema } from "@mrleebo/prisma-ast";
 import { getRelation } from "./utils/getRelation";
 import { importFile } from "./utils/import";
 import { mkFile } from "./utils/mkFile";
-import { propertyMap } from "./utils/propertyMap";
+import { dtoPropertyMap } from "./utils/propertyMap";
 
 const dtoTemplate = `
 import { ApiProperty, IntersectionType, OmitType, PartialType } from '@nestjs/swagger';
@@ -48,7 +48,7 @@ export function generateNestDto(model: Schema) {
 			const createdDtoField = v.properties
 				.filter((v) => v.type === "field")
 				.map((v) => {
-					return propertyMap(v);
+					return dtoPropertyMap(v);
 				})
 				.join("\n");
 			return {
