@@ -1,6 +1,6 @@
+import { strings } from "@angular-devkit/core";
 import type { Model, Schema } from "@mrleebo/prisma-ast";
 import { mkFile } from "./utils/mkFile";
-import { strings } from "@angular-devkit/core";
 
 export function generateNestModule(prisma: Schema) {
 	const entityList = prisma.list

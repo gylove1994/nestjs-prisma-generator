@@ -1,6 +1,6 @@
-import fs from "fs-extra";
 import * as p from "node:path";
 import chalk from "chalk";
+import fs from "fs-extra";
 
 export let mkFileCount = 0;
 

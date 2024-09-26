@@ -1,4 +1,5 @@
 import { strings } from "@angular-devkit/core";
+import { classify } from "@angular-devkit/core/src/utils/strings";
 import type { Model, Schema } from "@mrleebo/prisma-ast";
 import chalk from "chalk";
 import { getRelation } from "./utils/getRelation";
@@ -11,7 +12,6 @@ import {
 import { mkFile } from "./utils/mkFile";
 import { propertyMap } from "./utils/propertyMap";
 import { swaggerMap } from "./utils/swaggerMap";
-import { classify } from "@angular-devkit/core/src/utils/strings";
 
 export function generateEntity(model: Model) {
 	const propertiesContent = model.properties

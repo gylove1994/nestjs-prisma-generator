@@ -1,5 +1,5 @@
-import type { Model, Schema } from "@mrleebo/prisma-ast";
 import { strings } from "@angular-devkit/core";
+import type { Model, Schema } from "@mrleebo/prisma-ast";
 import { mkFile } from "./utils/mkFile";
 
 const controllerTemplate = `

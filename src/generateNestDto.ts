@@ -1,9 +1,9 @@
 import { strings } from "@angular-devkit/core";
 import type { Model, Schema } from "@mrleebo/prisma-ast";
-import { propertyMap } from "./utils/propertyMap";
-import { mkFile } from "./utils/mkFile";
 import { getRelation } from "./utils/getRelation";
 import { importFile } from "./utils/import";
+import { mkFile } from "./utils/mkFile";
+import { propertyMap } from "./utils/propertyMap";
 
 const dtoTemplate = `
 import { ApiProperty, IntersectionType, OmitType, PartialType } from '@nestjs/swagger';

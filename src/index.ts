@@ -1,17 +1,17 @@
 import { getSchema } from "@mrleebo/prisma-ast";
+import chalk from "chalk";
 import { Command } from "commander";
 import dotenv from "dotenv";
 import fs from "fs-extra";
 import inquirer from "inquirer";
 import { generateEntityFile, generatePickEntityFile } from "./generateEntity";
 import { generateEnumFile } from "./generateEnum";
-import { generateNestModuleFile } from "./generateNestModule";
-import { mkFileCount } from "./utils/mkFile";
-import chalk from "chalk";
 import { generateNestControllerFile } from "./generateNestController";
 import { generateNestDtoFile } from "./generateNestDto";
+import { generateNestModuleFile } from "./generateNestModule";
 import { generateNestTypesFile } from "./generateNestTypes";
 import { generateServiceFile } from "./generateService";
+import { mkFileCount } from "./utils/mkFile";
 
 dotenv.configDotenv({ path: ".env" });
 

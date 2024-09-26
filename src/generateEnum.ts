@@ -1,8 +1,8 @@
+import path from "node:path";
 import { strings } from "@angular-devkit/core";
 import type { Enum, Schema } from "@mrleebo/prisma-ast";
 import chalk from "chalk";
 import { mkFile } from "./utils/mkFile";
-import path from "node:path";
 
 export const createdEnumMap = new Map<
 	string,

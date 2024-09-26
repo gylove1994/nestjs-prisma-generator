@@ -1,6 +1,6 @@
 import type { Field } from "@mrleebo/prisma-ast";
-import { swaggerTypeMap, typeMap } from "./typeMap";
 import { createdEnumMap } from "../generateEnum";
+import { swaggerTypeMap, typeMap } from "./typeMap";
 
 export function swaggerMap(field: Field) {
 	if (typeof field.fieldType !== "string") {
