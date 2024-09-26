@@ -5,6 +5,7 @@ import { mkFile } from "./utils/mkFile";
 const serviceTemplate = `
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
+import { {_@modelNameCapitalize@_}IdExistDto, {_@modelNameCapitalize@_}CreateDto, {_@modelNameCapitalize@_}UpdateDto, Pagination{_@modelNameCapitalize@_}Dto } from './{_@modelName@_}.dtos';
 
 @Injectable()
 export class {_@modelNameCapitalize@_}Service {
@@ -14,8 +15,8 @@ export class {_@modelNameCapitalize@_}Service {
     return this.prisma.{_@modelName@_}.findMany();
   }
 
-  async findOne(id: string): Promise<unknown> {
-    return this.prisma.{_@modelName@_}.findUnique({ where: { id } });
+  async findOne(dto: {_@modelNameCapitalize@_}IdExistDto): Promise<unknown> {
+    return this.prisma.{_@modelName@_}.findUnique({ where: { id: dto.id } });
   }
 
   async create(dto: {_@modelNameCapitalize@_}CreateDto): Promise<unknown> {
@@ -49,7 +50,7 @@ export function generateService(model: Schema) {
 			return {
 				name: `${modelNameCamelize}`,
 				content: serviceTemplate
-					.replace(/{_@modelName@_}/g, v.name)
+					.replace(/{_@modelName@_}/g, modelNameCamelize)
 					.replace(/{_@modelNameCapitalize@_}/g, modelNameCapitalize),
 			};
 		});

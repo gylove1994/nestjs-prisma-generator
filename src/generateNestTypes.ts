@@ -1,11 +1,6 @@
 import { strings } from "@angular-devkit/core";
 import type { Schema } from "@mrleebo/prisma-ast";
 import { mkFile } from "./utils/mkFile";
-//{_@modelName@_}FindAllResponse,
-//{_@modelName@_}FindOneResponse,
-//{_@modelName@_}CreateResponse,
-//{_@modelName@_}UpdateResponse,
-//{_@modelName@_}DeleteResponse
 
 const typeTemplate = `import { ApiProperty } from '@nestjs/swagger';\n
 export class {_@modelNameCapitalize@_}FindAllResponse {}\n
