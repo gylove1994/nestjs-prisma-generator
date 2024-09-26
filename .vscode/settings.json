@@ -2,6 +2,7 @@
   "editor.defaultFormatter": "biomejs.biome",
   "cSpell.words": [
     "biomejs",
+    "lefthook",
     "mrleebo"
   ],
   "[json]": {

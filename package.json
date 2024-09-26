@@ -4,18 +4,14 @@
 	"description": "A command line tool for nestjs-prisma code generation",
 	"main": "dist/index.js",
 	"scripts": {
-		"lint": "biome check --write ./src",
+		"prepare": "lefthook install",
+		"lint": "biome check --write ./",
 		"dev": "nodemon --watch src --ext ts --exec \"rimraf dist && tsc && cp .env dist\"",
 		"build": "rimraf dist && tsc",
 		"prepublish": "npm run build",
 		"publish": "npm publish --access public"
 	},
-	"files": [
-		"dist",
-		"README.md",
-		"LICENSE",
-		"bin"
-	],
+	"files": ["dist", "README.md", "LICENSE", "bin"],
 	"bin": {
 		"npg": "bin/npg"
 	},
@@ -47,6 +43,7 @@
 		"@biomejs/biome": "1.9.2",
 		"@nestjs/swagger": "^7.4.2",
 		"@types/fs-extra": "^11.0.4",
+		"lefthook": "^1.7.17",
 		"nodemon": "^3.1.7",
 		"rimraf": "^6.0.1",
 		"ts-node": "^10.9.2",
