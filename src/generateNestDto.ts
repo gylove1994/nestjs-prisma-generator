@@ -28,6 +28,7 @@ export class {_@modelNameCapitalize@_}IdExistDto {
 }
 
 export class {_@modelNameCapitalize@_}CreateDto {
+
 {_@CreateDtoFields@_}
 }
 
@@ -47,9 +48,10 @@ export function generateNestDto(model: Schema) {
 				.join("\n");
 			const createdDtoField = v.properties
 				.filter((v) => v.type === "field")
-				.map((v) => {
-					return dtoPropertyMap(v);
+				.map((v, _i, array) => {
+					return dtoPropertyMap(v, array);
 				})
+				.filter((v) => v !== "")
 				.join("\n");
 			return {
 				name: `${modelNameCamelize}`,

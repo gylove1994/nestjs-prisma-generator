@@ -1,5 +1,6 @@
 import { strings } from "@angular-devkit/core";
-import type { Schema } from "@mrleebo/prisma-ast";
+import type { Model, Schema } from "@mrleebo/prisma-ast";
+import { getRelation, getRelationMap } from "./utils/getRelation";
 import { mkFile } from "./utils/mkFile";
 
 const serviceTemplate = `
@@ -20,7 +21,12 @@ export class {_@modelNameCapitalize@_}Service {
   }
 
   async create(dto: {_@modelNameCapitalize@_}CreateDto): Promise<unknown> {
-    return this.prisma.{_@modelName@_}.create({ data: dto });
+    const { {_@CreateDtoIdFields@_} ...rest} = dto;
+    const data = {
+      ...rest,
+{_@CreateDtoFields@_}
+    };
+    return this.prisma.{_@modelName@_}.create({ data });
   }
 
   async update(dto: {_@modelNameCapitalize@_}UpdateDto): Promise<unknown> {
@@ -47,11 +53,15 @@ export function generateService(model: Schema) {
 		.map((v) => {
 			const modelNameCamelize = strings.camelize(v.name);
 			const modelNameCapitalize = strings.capitalize(modelNameCamelize);
+			const createDtoFields = generateCreateDtoFields(v);
+			const createDtoIdFields = generateCreateDtoIdFields(v);
 			return {
 				name: `${modelNameCamelize}`,
 				content: serviceTemplate
 					.replace(/{_@modelName@_}/g, modelNameCamelize)
-					.replace(/{_@modelNameCapitalize@_}/g, modelNameCapitalize),
+					.replace(/{_@modelNameCapitalize@_}/g, modelNameCapitalize)
+					.replace(/{_@CreateDtoFields@_}/g, createDtoFields)
+					.replace(/{_@CreateDtoIdFields@_}/g, createDtoIdFields),
 			};
 		});
 	return list;
@@ -67,4 +77,46 @@ export function generateServiceFile(
 		const { name, content } = model;
 		mkFile(`${outputPath}/${name}`, `${name}.service.ts`, content, dryRun);
 	}
+}
+
+export function generateCreateDtoFields(model: Model) {
+	const list = model.properties
+		.filter((v) => v.type === "field")
+		.map((v) => {
+			const relationMap = getRelationMap(model);
+			const relation = relationMap.get(v.fieldType as string);
+			let res = null;
+			if (relation && v.array === true) {
+				res = `${relation}: {connect: ${relation}Ids?.map((id) => ({ id }))},`;
+				res = `...(${relation}Ids !== null && ${relation}Ids !== undefined) ? {${res.replace(",", "")}} : {},`;
+			} else if (relation) {
+				res = `${relation}: {connect: {id: ${relation}Id}},`;
+				if (v.optional === true) {
+					res = `...(${relation}Id !== null && ${relation}Id !== undefined) ? {${res}} : {},`;
+				}
+			}
+			return res;
+		});
+	return list
+		.filter((v) => v !== null)
+		.map((v) => `\t\t\t${v}`)
+		.join("\n");
+}
+
+export function generateCreateDtoIdFields(model: Model) {
+	const list = model.properties
+		.filter((v) => v.type === "field")
+		.map((v) => {
+			const relationMap = getRelationMap(model);
+			const relation = relationMap.get(v.fieldType as string);
+			if (relation && v.array === true) {
+				return `${v.name}Ids`;
+			}
+			if (relation) {
+				return `${v.name}Id`;
+			}
+			return null;
+		})
+		.filter((v) => v !== null && v !== undefined);
+	return list.length > 0 ? `${list.join(", ")},` : "";
 }
