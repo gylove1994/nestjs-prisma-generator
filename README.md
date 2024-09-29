@@ -15,7 +15,7 @@ NestJS Prisma Generator is a command-line tool for generating NestJS and Prisma 
 - Generate Enum code to ensure type safety
 - Create complete Module structures, including controllers, services, and DTOs
 - Support generating all types of code to meet different development needs
-- Generate code structures that comply with NestJS best practices
+- Generate code structures that comply with my own best practices（**This is an opinionated tool**）
 - Support custom templates for flexible adaptation to project requirements (TBD)
 
 ## Installation

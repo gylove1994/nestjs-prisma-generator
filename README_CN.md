@@ -4,7 +4,7 @@
 
 ## 项目简介
 
-NestJS Prisma Generator 是一个用于生成 NestJS 和 Prisma 代码的命令行工具。
+NestJS Prisma Generator 是一个用于从 Prisma schema 文件生成 NestJS 代码的命令行工具。
 
 ## 功能
 
@@ -12,7 +12,7 @@ NestJS Prisma Generator 是一个用于生成 NestJS 和 Prisma 代码的命令�
 - 生成枚举(Enum)代码,确保类型安全
 - 创建完整的模块(Module)结构,包括控制器、服务和 DTO
 - 支持生成所有类型的代码,满足不同开发需求
-- 生成符合 NestJS 最佳实践的代码结构
+- 生成符合我自己的最佳实践的代码结构
 - 支持自定义模板,灵活适应项目需求 (TBD)
 
 ## 安装

@@ -1,7 +1,7 @@
 {
 	"name": "@gylove1994/npg",
 	"version": "0.2.4",
-	"description": "A command line tool for nestjs-prisma code generation",
+	"description": "A command-line tool for generating NestJS code form schema.prisma file.",
 	"main": "dist/index.js",
 	"scripts": {
 		"prepare": "lefthook install",
