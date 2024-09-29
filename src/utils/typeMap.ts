@@ -37,3 +37,22 @@ export function swaggerTypeMap(type: string | Func) {
 			return type;
 	}
 }
+
+export function classValidatorTypeMap(type: string | Func) {
+	switch (type) {
+		case "String":
+			return "@IsString";
+		case "Int":
+			return "@IsNumber";
+		case "Float":
+			return "@IsNumber";
+		case "Boolean":
+			return "@IsBoolean";
+		case "DateTime":
+			return "@IsDate";
+		case "Json":
+			return "@IsObject";
+		default:
+			return "@IsEnum";
+	}
+}

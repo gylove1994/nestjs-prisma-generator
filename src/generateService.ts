@@ -6,7 +6,7 @@ import { mkFile } from "./utils/mkFile";
 const serviceTemplate = `
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { {_@modelNameCapitalize@_}IdExistDto, {_@modelNameCapitalize@_}CreateDto, {_@modelNameCapitalize@_}UpdateDto, Pagination{_@modelNameCapitalize@_}Dto } from './{_@modelName@_}.dtos';
+import type { {_@modelNameCapitalize@_}IdExistDto, {_@modelNameCapitalize@_}CreateDto, {_@modelNameCapitalize@_}UpdateDto, Pagination{_@modelNameCapitalize@_}Dto } from './{_@modelName@_}.dtos';
 
 @Injectable()
 export class {_@modelNameCapitalize@_}Service {
@@ -83,7 +83,7 @@ export function generateCreateDtoFields(model: Model) {
 	const list = model.properties
 		.filter((v) => v.type === "field")
 		.map((v) => {
-			const relationMap = getRelationMap(model);
+			const relationMap = getRelationMap(model, true);
 			const relation = relationMap.get(v.fieldType as string);
 			let res = null;
 			if (relation && v.array === true) {
@@ -107,7 +107,7 @@ export function generateCreateDtoIdFields(model: Model) {
 	const list = model.properties
 		.filter((v) => v.type === "field")
 		.map((v) => {
-			const relationMap = getRelationMap(model);
+			const relationMap = getRelationMap(model, true);
 			const relation = relationMap.get(v.fieldType as string);
 			if (relation && v.array === true) {
 				return `${v.name}Ids`;

@@ -1,13 +1,14 @@
 import { strings } from "@angular-devkit/core";
 import type { Model, Schema } from "@mrleebo/prisma-ast";
+import { createdEnumMap } from "./generateEnum";
 import { getRelation } from "./utils/getRelation";
-import { importFile } from "./utils/import";
+import { importFile, importJsonValue } from "./utils/import";
 import { mkFile } from "./utils/mkFile";
 import { dtoPropertyMap } from "./utils/propertyMap";
 
 const dtoTemplate = `
 import { ApiProperty, IntersectionType, OmitType, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsNumber, IsDate, IsBoolean, IsArray, IsObject, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsDate, IsBoolean, IsArray, IsObject, IsOptional, IsEnum } from 'class-validator';
 {_@imports@_}
 
 export class Pagination{_@modelNameCapitalize@_}Dto {
@@ -37,6 +38,7 @@ export class {_@modelNameCapitalize@_}UpdateDto extends IntersectionType({_@mode
 `;
 
 export function generateNestDto(model: Schema) {
+	let hasJson = false;
 	const fields = model.list
 		.filter((field) => field.type === "model")
 		.map((v) => {
@@ -44,11 +46,15 @@ export function generateNestDto(model: Schema) {
 			const modelNameCamelize = strings.camelize(field.name);
 			const modelNameCapitalize = strings.capitalize(modelNameCamelize);
 			const imports = getRelation(field)
-				.map((v) => importFile(v, true))
-				.join("\n");
+				.filter((v) => createdEnumMap.has(v))
+				.map((v) => importFile(v, true));
 			const createdDtoField = v.properties
 				.filter((v) => v.type === "field")
 				.map((v, _i, array) => {
+					if (v.fieldType === "Json" && !hasJson) {
+						hasJson = true;
+						imports.push(importJsonValue());
+					}
 					return dtoPropertyMap(v, array);
 				})
 				.filter((v) => v !== "")
@@ -59,7 +65,7 @@ export function generateNestDto(model: Schema) {
 					.replaceAll("{_@modelName@_}", modelNameCamelize)
 					.replaceAll("{_@modelNameCapitalize@_}", modelNameCapitalize)
 					.replaceAll("{_@CreateDtoFields@_}", createdDtoField)
-					.replaceAll("{_@imports@_}", imports),
+					.replaceAll("{_@imports@_}", imports.join("\n")),
 			};
 		});
 	return fields;

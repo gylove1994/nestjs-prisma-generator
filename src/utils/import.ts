@@ -2,6 +2,9 @@ import { strings } from "@angular-devkit/core";
 import { createdEnumMap } from "../generateEnum";
 
 export function importFile(importName: string, useRelativePath = false) {
+	if (importName === "JsonValue") {
+		return `import { JsonValue } from "@prisma/client/runtime/library";\n`;
+	}
 	if (
 		createdEnumMap.has(importName) ||
 		createdEnumMap.has(importName.toUpperCase())
@@ -16,7 +19,7 @@ export function importApiProperty() {
 }
 
 export function importJsonValue() {
-	return `import { JsonValue } from "@prisma/client";\n`;
+	return `import { JsonValue } from "@prisma/client/runtime/library";\n`;
 }
 
 export function importPickType() {

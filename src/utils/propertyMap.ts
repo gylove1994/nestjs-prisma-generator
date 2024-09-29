@@ -1,6 +1,7 @@
 import type { Field, Func } from "@mrleebo/prisma-ast";
+import { classValidatorMap } from "./classValidatorMap";
 import { getRelation } from "./getRelation";
-import { typeMap } from "./typeMap";
+import { classValidatorTypeMap, typeMap } from "./typeMap";
 
 export function propertyMap(field: Field) {
 	return `${field.name}${field.optional ? "?" : ""}: ${typeMap(
@@ -47,12 +48,12 @@ export function dtoPropertyMap(field: Field, array: Field[]) {
 			return v.name === `${field.name}Id`;
 		}) ?? false;
 	if (isRelation && field.array === true) {
-		return `${field.name}Ids${field.optional ? "?" : ""}: string[] ${field.optional ? "| null" : ""}\n`;
+		return `@IsString({ each: true, message: "${field.name}Ids 类型错误，请传入 string[] 类型" })\n//@IsUUID("4", { each: true, message: "${field.name}Ids 类型错误，请传入 uuid[] 类型" })\n@IsOptional()\n${field.name}Ids${field.optional ? "?" : ""}: string[] ${field.optional ? "| null" : ""}\n`;
 	}
 	if (isRelation && hasRelationId) {
 		return "";
 	}
-	return `${field.name}${field.optional ? "?" : ""}: ${typeMap(
+	return `${classValidatorMap(field)}${field.name}${field.optional ? "?" : ""}: ${typeMap(
 		field.fieldType,
 	)} ${field.optional ? "| null" : ""}\n`;
 }
