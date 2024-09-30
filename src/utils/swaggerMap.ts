@@ -2,7 +2,15 @@ import type { Field } from "@mrleebo/prisma-ast";
 import { createdEnumMap } from "../generateEnum";
 import { swaggerTypeMap, typeMap } from "./typeMap";
 
-export function swaggerMap(field: Field) {
+export type SwaggerMapOption = {
+	isEnum?: boolean;
+	setType?: string;
+	setArray?: boolean;
+	setRequired?: boolean;
+	setDescription?: string;
+};
+
+export function swaggerMap(field: Field, setOption?: SwaggerMapOption) {
 	if (typeof field.fieldType !== "string") {
 		return "";
 	}
@@ -15,9 +23,21 @@ export function swaggerMap(field: Field) {
 			field.optional || true
 		} })\n`;
 	}
-	return `@ApiProperty({ type: ${swaggerTypeMap(field.fieldType)}, description: "${
-		field.comment || ""
-	}", isArray: ${field.array || false}, required: ${
-		field.optional || true
+	return `@ApiProperty({ ${setOption?.isEnum ? "enum: " : "type: "}${
+		setOption?.setType !== undefined
+			? setOption.setType
+			: swaggerTypeMap(field.fieldType)
+	}, description: "${field.comment || ""}", isArray: ${
+		setOption?.setArray !== undefined
+			? setOption.setArray
+			: field.array !== undefined
+				? field.array
+				: false
+	}, required: ${
+		setOption?.setRequired !== undefined
+			? setOption.setRequired
+			: field.optional !== undefined
+				? field.optional === false
+				: true
 	} })\n`;
 }

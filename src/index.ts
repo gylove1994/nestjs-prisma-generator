@@ -67,6 +67,7 @@ program
 			generateEnumFile(prisma, answers.outputPath, answers.dryRun);
 			generateEntityFile(prisma, answers.outputPath, answers.dryRun);
 		} else if (answers.type === "nestModule") {
+			generateEnumFile(prisma, answers.outputPath, true, true);
 			generateNestModuleFile(prisma, answers.outputPath, answers.dryRun);
 			generateNestControllerFile(prisma, answers.outputPath, answers.dryRun);
 			generateNestDtoFile(prisma, answers.outputPath, answers.dryRun);
@@ -75,7 +76,6 @@ program
 		} else if (answers.type === "all") {
 			generateEnumFile(prisma, answers.outputPath, answers.dryRun);
 			generateEntityFile(prisma, answers.outputPath, answers.dryRun);
-			generatePickEntityFile(prisma, answers.outputPath, answers.dryRun);
 			generateNestModuleFile(prisma, answers.outputPath, answers.dryRun);
 			generateNestControllerFile(prisma, answers.outputPath, answers.dryRun);
 			generateNestDtoFile(prisma, answers.outputPath, answers.dryRun);
@@ -85,10 +85,41 @@ program
 		console.log(`${chalk.green("SUCCESS")} ${mkFileCount} files created 🔥`);
 	});
 
-// program
-// 	.command("generate")
-// 	.alias("g")
-// 	.description("generate code")
-// 	.addArgument(new Argument("type", "The type of the code to generate"));
+program
+	.command("generate")
+	.alias("g")
+	.description("generate code")
+	.argument("type", "The type of the code to generate")
+	.argument("prismaPath", "The path to the prisma schema file")
+	.argument("outputPath", "The path to the output directory")
+	.argument("dryRun", "Whether to run in dry run mode")
+	.action(async (type, prismaPath, outputPath, dryRun) => {
+		const schemaFile = await fs.readFile(prismaPath, "utf-8");
+		const prisma = getSchema(schemaFile);
+		if (type === "entity-with-pick") {
+			generateEnumFile(prisma, outputPath, dryRun);
+			generateEntityFile(prisma, outputPath, dryRun);
+			generatePickEntityFile(prisma, outputPath, dryRun);
+		} else if (type === "entity") {
+			generateEnumFile(prisma, outputPath, dryRun);
+			generateEntityFile(prisma, outputPath, dryRun);
+		} else if (type === "nestModule") {
+			generateNestModuleFile(prisma, outputPath, dryRun);
+			generateNestControllerFile(prisma, outputPath, dryRun);
+			generateNestDtoFile(prisma, outputPath, dryRun);
+			generateNestTypesFile(prisma, outputPath, dryRun);
+			generateServiceFile(prisma, outputPath, dryRun);
+		} else if (type === "all") {
+			generateEnumFile(prisma, outputPath, dryRun);
+			generateEntityFile(prisma, outputPath, dryRun);
+			generatePickEntityFile(prisma, outputPath, dryRun);
+			generateNestModuleFile(prisma, outputPath, dryRun);
+			generateNestControllerFile(prisma, outputPath, dryRun);
+			generateNestDtoFile(prisma, outputPath, dryRun);
+			generateNestTypesFile(prisma, outputPath, dryRun);
+			generateServiceFile(prisma, outputPath, dryRun);
+		}
+		console.log(`${chalk.green("SUCCESS")} ${mkFileCount} files created 🔥`);
+	});
 
 program.parse(process.argv);

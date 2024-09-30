@@ -28,10 +28,11 @@ export function generateEnumFile(
 	prisma: Schema,
 	outputPath: string,
 	dryRun: boolean,
+	silent = false,
 ) {
 	const enumList = prisma.list.filter((item) => item.type === "enum");
 	for (const e of enumList) {
 		const { name, content } = generateEnum(e);
-		mkFile(outputPath, name, content, dryRun);
+		mkFile(outputPath, name, content, dryRun, silent);
 	}
 }

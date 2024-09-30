@@ -1,6 +1,7 @@
 import type { Field, Func } from "@mrleebo/prisma-ast";
 import { classValidatorMap } from "./classValidatorMap";
-import { getRelation } from "./getRelation";
+import { getRelation, getRelationMap } from "./getRelation";
+import { swaggerMap } from "./swaggerMap";
 import { classValidatorTypeMap, typeMap } from "./typeMap";
 
 export function propertyMap(field: Field) {
@@ -48,12 +49,14 @@ export function dtoPropertyMap(field: Field, array: Field[]) {
 			return v.name === `${field.name}Id`;
 		}) ?? false;
 	if (isRelation && field.array === true) {
-		return `@IsString({ each: true, message: "${field.name}Ids 类型错误，请传入 string[] 类型" })\n//@IsUUID("4", { each: true, message: "${field.name}Ids 类型错误，请传入 uuid[] 类型" })\n@IsOptional()\n${field.name}Ids${field.optional ? "?" : ""}: string[] ${field.optional ? "| null" : ""}\n`;
+		return `${swaggerMap(field, { setType: "String", setArray: true, setRequired: false, setDescription: `${field.name}Ids` })}@IsString({ each: true, message: "${field.name}Ids 类型错误，请传入 string[] 类型" })\n//@IsUUID("4", { each: true, message: "${field.name}Ids 类型错误，请传入 uuid[] 类型" })\n@IsOptional()\n${field.name}Ids${field.optional ? "?" : ""}: string[] ${field.optional ? "| null" : ""}\n`;
 	}
 	if (isRelation && hasRelationId) {
 		return "";
 	}
-	return `${classValidatorMap(field)}${field.name}${field.optional ? "?" : ""}: ${typeMap(
+	return `${swaggerMap(field, { setRequired: !field.optional, setDescription: `${field.name}` })}${classValidatorMap(
+		field,
+	)}${field.name}${field.optional ? "?" : ""}: ${typeMap(
 		field.fieldType,
 	)} ${field.optional ? "| null" : ""}\n`;
 }

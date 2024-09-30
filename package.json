@@ -1,6 +1,6 @@
 {
 	"name": "@gylove1994/npg",
-	"version": "0.2.4",
+	"version": "0.2.5",
 	"description": "A command-line tool for generating NestJS code form schema.prisma file.",
 	"main": "dist/index.js",
 	"scripts": {

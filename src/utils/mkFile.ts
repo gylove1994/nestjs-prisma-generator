@@ -9,6 +9,7 @@ export function mkFile(
 	fileName: string,
 	content: string,
 	dryRun = false,
+	silent = false,
 ) {
 	if (!dryRun) {
 		fs.ensureDirSync(path);
