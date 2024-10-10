@@ -7,17 +7,20 @@ const serviceTemplate = `
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import type { {_@modelNameCapitalize@_}IdExistDto, {_@modelNameCapitalize@_}CreateDto, {_@modelNameCapitalize@_}UpdateDto, Pagination{_@modelNameCapitalize@_}Dto } from './{_@modelName@_}.dtos';
+{__@importResultDataVo@__}
 
 @Injectable()
 export class {_@modelNameCapitalize@_}Service {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<unknown> {
-    return this.prisma.{_@modelName@_}.findMany();
+    const res = await this.prisma.{_@modelName@_}.findMany();
+    {__@returnResultDataVo@__}
   }
 
   async findOne(dto: {_@modelNameCapitalize@_}IdExistDto): Promise<unknown> {
-    return this.prisma.{_@modelName@_}.findUnique({ where: { id: dto.id } });
+    const res = await this.prisma.{_@modelName@_}.findUnique({ where: { id: dto.id } });
+    {__@returnResultDataVo@__}
   }
 
   async create(dto: {_@modelNameCapitalize@_}CreateDto): Promise<unknown> {
@@ -26,28 +29,32 @@ export class {_@modelNameCapitalize@_}Service {
       ...rest,
 {_@CreateDtoFields@_}
     };
-    return this.prisma.{_@modelName@_}.create({ data });
+    const res = await this.prisma.{_@modelName@_}.create({ data });
+    {__@returnResultDataVo@__}
   }
 
   async update(dto: {_@modelNameCapitalize@_}UpdateDto): Promise<unknown> {
     const { id, ...data } = dto;
-    return this.prisma.{_@modelName@_}.update({ where: { id }, data });
+    const res = await this.prisma.{_@modelName@_}.update({ where: { id }, data });
+    {__@returnResultDataVo@__}
   }
 
   async delete(dto: {_@modelNameCapitalize@_}IdExistDto): Promise<unknown> {
-    return this.prisma.{_@modelName@_}.delete({ where: { id: dto.id } });
+    const res = await this.prisma.{_@modelName@_}.delete({ where: { id: dto.id } });
+    {__@returnResultDataVo@__}
   }
 
   async list(dto: Pagination{_@modelNameCapitalize@_}Dto): Promise<unknown> {
-    return this.prisma.{_@modelName@_}.findMany({
+    const res = await this.prisma.{_@modelName@_}.findMany({
       take: dto.pageSize,
       skip: (dto.page - 1) * dto.pageSize,
     });
+    {__@returnResultDataVo@__}
   }
 }
 `;
 
-export function generateService(model: Schema) {
+export function generateService(model: Schema, useResultDataVo: boolean) {
 	const list = model.list
 		.filter((v) => v.type === "model")
 		.map((v) => {
@@ -61,7 +68,19 @@ export function generateService(model: Schema) {
 					.replace(/{_@modelName@_}/g, modelNameCamelize)
 					.replace(/{_@modelNameCapitalize@_}/g, modelNameCapitalize)
 					.replace(/{_@CreateDtoFields@_}/g, createDtoFields)
-					.replace(/{_@CreateDtoIdFields@_}/g, createDtoIdFields),
+					.replace(/{_@CreateDtoIdFields@_}/g, createDtoIdFields)
+					.replace(
+						/{__@importResultDataVo@__}/g,
+						useResultDataVo
+							? "import { ResultDataVo } from '@entity/resultDataVo';"
+							: "",
+					)
+					.replace(
+						/{__@returnResultDataVo@__}/g,
+						useResultDataVo
+							? "return ResultDataVo.ok({data: res});"
+							: "return res;",
+					),
 			};
 		});
 	return list;
@@ -71,8 +90,9 @@ export function generateServiceFile(
 	prisma: Schema,
 	outputPath: string,
 	dryRun: boolean,
+	useResultDataVo: boolean,
 ) {
-	const list = generateService(prisma);
+	const list = generateService(prisma, useResultDataVo);
 	for (const model of list) {
 		const { name, content } = model;
 		mkFile(`${outputPath}/${name}`, `${name}.service.ts`, content, dryRun);

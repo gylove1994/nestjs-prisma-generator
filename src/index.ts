@@ -12,6 +12,7 @@ import { generateNestModuleFile } from "./generateNestModule";
 import { generateNestTypesFile } from "./generateNestTypes";
 import { generateServiceFile } from "./generateService";
 import { mkFileCount } from "./utils/mkFile";
+import { generateResultDataVoFile } from "./generateResultDataVo";
 
 dotenv.configDotenv({ path: ".env" });
 
@@ -67,20 +68,58 @@ program
 			generateEnumFile(prisma, answers.outputPath, answers.dryRun);
 			generateEntityFile(prisma, answers.outputPath, answers.dryRun);
 		} else if (answers.type === "nestModule") {
+			const ans = await inquirer.prompt({
+				type: "confirm",
+				name: "useResultDataVo",
+				message: "Do you want to use ResultDataVo?",
+				default: true,
+			});
+			if (ans.useResultDataVo) {
+				generateResultDataVoFile(answers.outputPath, answers.dryRun);
+			}
 			generateEnumFile(prisma, answers.outputPath, true, true);
 			generateNestModuleFile(prisma, answers.outputPath, answers.dryRun);
-			generateNestControllerFile(prisma, answers.outputPath, answers.dryRun);
+			generateNestControllerFile(
+				prisma,
+				answers.outputPath,
+				answers.dryRun,
+				ans.useResultDataVo,
+			);
 			generateNestDtoFile(prisma, answers.outputPath, answers.dryRun);
 			generateNestTypesFile(prisma, answers.outputPath, answers.dryRun);
-			generateServiceFile(prisma, answers.outputPath, answers.dryRun);
+			generateServiceFile(
+				prisma,
+				answers.outputPath,
+				answers.dryRun,
+				ans.useResultDataVo,
+			);
 		} else if (answers.type === "all") {
+			const ans = await inquirer.prompt({
+				type: "confirm",
+				name: "useResultDataVo",
+				message: "Do you want to use ResultDataVo?",
+				default: true,
+			});
+			if (ans.useResultDataVo) {
+				generateResultDataVoFile(answers.outputPath, answers.dryRun);
+			}
 			generateEnumFile(prisma, answers.outputPath, answers.dryRun);
 			generateEntityFile(prisma, answers.outputPath, answers.dryRun);
 			generateNestModuleFile(prisma, answers.outputPath, answers.dryRun);
-			generateNestControllerFile(prisma, answers.outputPath, answers.dryRun);
+			generateNestControllerFile(
+				prisma,
+				answers.outputPath,
+				answers.dryRun,
+				ans.useResultDataVo,
+			);
 			generateNestDtoFile(prisma, answers.outputPath, answers.dryRun);
 			generateNestTypesFile(prisma, answers.outputPath, answers.dryRun);
-			generateServiceFile(prisma, answers.outputPath, answers.dryRun);
+			generateServiceFile(
+				prisma,
+				answers.outputPath,
+				answers.dryRun,
+				ans.useResultDataVo,
+			);
 		}
 		console.log(`${chalk.green("SUCCESS")} ${mkFileCount} files created 🔥`);
 	});
@@ -93,7 +132,8 @@ program
 	.argument("prismaPath", "The path to the prisma schema file")
 	.argument("outputPath", "The path to the output directory")
 	.argument("dryRun", "Whether to run in dry run mode")
-	.action(async (type, prismaPath, outputPath, dryRun) => {
+	.option("-r, --resultDataVo", "Whether to use ResultDataVo")
+	.action(async (type, prismaPath, outputPath, dryRun, resultDataVo) => {
 		const schemaFile = await fs.readFile(prismaPath, "utf-8");
 		const prisma = getSchema(schemaFile);
 		if (type === "entity-with-pick") {
@@ -105,19 +145,19 @@ program
 			generateEntityFile(prisma, outputPath, dryRun);
 		} else if (type === "nestModule") {
 			generateNestModuleFile(prisma, outputPath, dryRun);
-			generateNestControllerFile(prisma, outputPath, dryRun);
+			generateNestControllerFile(prisma, outputPath, dryRun, resultDataVo);
 			generateNestDtoFile(prisma, outputPath, dryRun);
 			generateNestTypesFile(prisma, outputPath, dryRun);
-			generateServiceFile(prisma, outputPath, dryRun);
+			generateServiceFile(prisma, outputPath, dryRun, resultDataVo);
 		} else if (type === "all") {
 			generateEnumFile(prisma, outputPath, dryRun);
 			generateEntityFile(prisma, outputPath, dryRun);
 			generatePickEntityFile(prisma, outputPath, dryRun);
 			generateNestModuleFile(prisma, outputPath, dryRun);
-			generateNestControllerFile(prisma, outputPath, dryRun);
+			generateNestControllerFile(prisma, outputPath, dryRun, resultDataVo);
 			generateNestDtoFile(prisma, outputPath, dryRun);
 			generateNestTypesFile(prisma, outputPath, dryRun);
-			generateServiceFile(prisma, outputPath, dryRun);
+			generateServiceFile(prisma, outputPath, dryRun, resultDataVo);
 		}
 		console.log(`${chalk.green("SUCCESS")} ${mkFileCount} files created 🔥`);
 	});
