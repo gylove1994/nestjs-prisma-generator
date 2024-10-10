@@ -9,10 +9,11 @@ import { {_@modelNameCapitalize@_}IdExistDto, {_@modelNameCapitalize@_}CreateDto
 import { ApiResponse, ApiTags, ApiOperation, ApiExtraModels } from '@nestjs/swagger';
 import { HttpCode, Query, Body, Post, Get } from '@nestjs/common';
 import { {_@modelNameCapitalize@_}FindAllResponse, {_@modelNameCapitalize@_}FindOneResponse, {_@modelNameCapitalize@_}CreateResponse, {_@modelNameCapitalize@_}UpdateResponse, {_@modelNameCapitalize@_}DeleteResponse, {_@modelNameCapitalize@_}ListResponse } from './{_@modelName@_}.types';
+import { {_@modelNameCapitalize@_} } from '@entity/{_@modelName@_}Entity';
 
 @ApiTags('{_@modelNameCapitalize@_}')
 @Controller('{_@modelName@_}')
-@ApiExtraModels({_@modelNameCapitalize@_}FindAllResponse, {_@modelNameCapitalize@_}FindOneResponse, {_@modelNameCapitalize@_}CreateResponse, {_@modelNameCapitalize@_}UpdateResponse, {_@modelNameCapitalize@_}DeleteResponse, {_@modelNameCapitalize@_}ListResponse)
+@ApiExtraModels({_@modelNameCapitalize@_}, {_@modelNameCapitalize@_}FindAllResponse, {_@modelNameCapitalize@_}FindOneResponse, {_@modelNameCapitalize@_}CreateResponse, {_@modelNameCapitalize@_}UpdateResponse, {_@modelNameCapitalize@_}DeleteResponse, {_@modelNameCapitalize@_}ListResponse)
 export class {_@modelNameCapitalize@_}Controller {
   constructor(private readonly {_@modelName@_}Service: {_@modelNameCapitalize@_}Service) {}
 

@@ -8,14 +8,30 @@ import { dtoPropertyMap } from "./utils/propertyMap";
 
 const dtoTemplate = `
 import { ApiProperty, IntersectionType, OmitType, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsNumber, IsDate, IsBoolean, IsArray, IsObject, IsOptional, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsDate, IsBoolean, IsArray, IsObject, IsOptional, IsEnum, Min, Max } from 'class-validator';
+import { Transform } from 'class-transformer';
 {_@imports@_}
 
 export class Pagination{_@modelNameCapitalize@_}Dto {
-  @ApiProperty({ description: '分页大小' })
+  @ApiProperty({ description: '分页大小', example: 10, minimum: 1, maximum: 100 })
+	@Transform(({ value }) => Number.parseInt(value))
+	@IsNumber({
+		allowNaN: false,
+		allowInfinity: false,
+		maxDecimalPlaces: 0,
+	}, { message: '分页大小必须是整数' })
+	@Min(1, { message: '分页大小必须大于0' })
+	@Max(100, { message: '分页大小不能超过100' })
   pageSize: number;
 
-  @ApiProperty({ description: '当前页' })
+  @ApiProperty({ description: '当前页', example: 1, minimum: 1 })
+  @Transform(({ value }) => Number.parseInt(value))
+	@IsNumber({
+		allowNaN: false,
+		allowInfinity: false,
+		maxDecimalPlaces: 0,
+	}, { message: '当前页必须是整数' })
+	@Min(1, { message: '当前页必须大于0' })
   page: number;
 }
 
