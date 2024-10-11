@@ -10,9 +10,9 @@ import { generateNestControllerFile } from "./generateNestController";
 import { generateNestDtoFile } from "./generateNestDto";
 import { generateNestModuleFile } from "./generateNestModule";
 import { generateNestTypesFile } from "./generateNestTypes";
+import { generateResultDataVoFile } from "./generateResultDataVo";
 import { generateServiceFile } from "./generateService";
 import { mkFileCount } from "./utils/mkFile";
-import { generateResultDataVoFile } from "./generateResultDataVo";
 
 dotenv.configDotenv({ path: ".env" });
 
