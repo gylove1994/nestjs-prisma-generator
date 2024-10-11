@@ -29,7 +29,7 @@ export function generateEntity(model: Model) {
 		.join("");
 	const content = `${imports}\nexport class ${strings.classify(
 		model.name,
-	)} {\n${propertiesContent}}\n\n${generateEntityRelationSeparateClass(model)}`;
+	)} {\n${propertiesContent}}\n\n${generateEntityRelationSeparateClass(model)}\n${generateEntityNoRelationClass(model)}`;
 	return {
 		name: `${strings.camelize(model.name)}Entity.ts`,
 		content,
@@ -47,6 +47,17 @@ export function generateEntityRelationSeparateClass(model: Model) {
 				`export class ${strings.classify(`${model.name}Relation${v.fieldType}`)}{\n${swaggerMap(v) + propertyMap(v)}}\n`,
 		);
 	return relations.join("\n");
+}
+
+export function generateEntityNoRelationClass(model: Model) {
+	const propertiesContent = model.properties
+		.filter(
+			(v: any) =>
+				v.type === "field" && !getRelation(model).includes(v.fieldType),
+		)
+		.map((prop: any) => swaggerMap(prop) + propertyMap(prop))
+		.join("\n");
+	return `export class ${strings.classify(model.name)}NoRelation {\n${propertiesContent}}\n`;
 }
 
 export function generateEntityFile(
