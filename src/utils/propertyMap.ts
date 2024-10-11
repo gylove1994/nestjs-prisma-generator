@@ -7,7 +7,7 @@ import { classValidatorTypeMap, typeMap } from "./typeMap";
 export function propertyMap(field: Field) {
 	return `${field.name}${field.optional ? "?" : ""}: ${typeMap(
 		field.fieldType,
-	)} ${field.optional ? "| null" : ""}\n`;
+	)}${field.array ? "[]" : ""} ${field.optional ? "| null" : ""}\n`;
 }
 
 export function isFunc(field: any): field is Func {
