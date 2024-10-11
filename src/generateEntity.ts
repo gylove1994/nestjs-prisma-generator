@@ -1,7 +1,6 @@
 import { strings } from "@angular-devkit/core";
 import { classify } from "@angular-devkit/core/src/utils/strings";
 import type { Model, Schema } from "@mrleebo/prisma-ast";
-import chalk from "chalk";
 import { getRelation } from "./utils/getRelation";
 import {
 	importApiProperty,
@@ -30,11 +29,24 @@ export function generateEntity(model: Model) {
 		.join("");
 	const content = `${imports}\nexport class ${strings.classify(
 		model.name,
-	)} {\n${propertiesContent}}\n`;
+	)} {\n${propertiesContent}}\n\n${generateEntityRelationSeparateClass(model)}`;
 	return {
 		name: `${strings.camelize(model.name)}Entity.ts`,
 		content,
 	};
+}
+
+export function generateEntityRelationSeparateClass(model: Model) {
+	const relationsName = getRelation(model);
+	const relations = model.properties
+		.filter(
+			(v: any) => v.type === "field" && relationsName.includes(v.fieldType),
+		)
+		.map(
+			(v: any) =>
+				`export class ${strings.classify(`${model.name}Relation${v.fieldType}`)}{\n${swaggerMap(v) + propertyMap(v)}}\n`,
+		);
+	return relations.join("\n");
 }
 
 export function generateEntityFile(
@@ -104,7 +116,7 @@ export function generatePickEntity(model: Model) {
 
 	// 添加新的函数，使用泛型来确保返回类型的正确性
 	const pickTypeFunction = `
-export function ${entityName}PickType<T extends keyof ${entityName}>(keys: T[]) {
+export function ${entityName}PickType<T extends keyof ${entityName}>(keys: T[]):any {
   const sortedKeys = keys.sort().join('_');
   switch (sortedKeys) {
     ${combinations
