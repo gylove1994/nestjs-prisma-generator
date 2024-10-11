@@ -9,12 +9,12 @@ import { {_@modelNameCapitalize@_}IdExistDto, {_@modelNameCapitalize@_}CreateDto
 import { ApiResponse, ApiTags, ApiOperation, ApiExtraModels } from '@nestjs/swagger';
 import { HttpCode, Query, Body, Post, Get } from '@nestjs/common';
 import { {_@modelNameCapitalize@_}FindAllResponse, {_@modelNameCapitalize@_}FindOneResponse, {_@modelNameCapitalize@_}CreateResponse, {_@modelNameCapitalize@_}UpdateResponse, {_@modelNameCapitalize@_}DeleteResponse, {_@modelNameCapitalize@_}ListResponse } from './{_@modelName@_}.types';
-import { {_@modelNameCapitalize@_} } from '@entity/{_@modelName@_}Entity';
+import { {_@modelNameCapitalize@_}, {_@modelNameCapitalize@_}NoRelation } from '@entity/{_@modelName@_}Entity';
 {__@useResultDataVo@__}
 
 @ApiTags('{_@modelNameCapitalize@_}')
 @Controller('{_@modelName@_}')
-@ApiExtraModels({_@modelNameCapitalize@_}, {_@modelNameCapitalize@_}FindAllResponse, {_@modelNameCapitalize@_}FindOneResponse, {_@modelNameCapitalize@_}CreateResponse, {_@modelNameCapitalize@_}UpdateResponse, {_@modelNameCapitalize@_}DeleteResponse, {_@modelNameCapitalize@_}ListResponse)
+@ApiExtraModels({_@modelNameCapitalize@_}, {_@modelNameCapitalize@_}NoRelation, {_@modelNameCapitalize@_}FindAllResponse, {_@modelNameCapitalize@_}FindOneResponse, {_@modelNameCapitalize@_}CreateResponse, {_@modelNameCapitalize@_}UpdateResponse, {_@modelNameCapitalize@_}DeleteResponse, {_@modelNameCapitalize@_}ListResponse)
 export class {_@modelNameCapitalize@_}Controller {
   constructor(private readonly {_@modelName@_}Service: {_@modelNameCapitalize@_}Service) {}
 
@@ -101,7 +101,7 @@ export function generateNestController(
 				.replace(
 					/{__@useResultDataVoFindAllRes@__}/g,
 					useResultDataVo
-						? "@ApiResult({_@modelNameCapitalize@_}FindAllResponse)"
+						? "@ApiResult({_@modelNameCapitalize@_}FindAllResponse,true)"
 						: "@ApiResponse({\n\t\tstatus: 200,\n\t\ttype: {_@modelNameCapitalize@_}FindAllResponse,\n\t})",
 				)
 				.replace(
@@ -125,13 +125,13 @@ export function generateNestController(
 				.replace(
 					/{__@useResultDataVoDeleteRes@__}/g,
 					useResultDataVo
-						? "@ApiResult({_@modelNameCapitalize@_}DeleteResponse)"
+						? "@ApiResult(String)"
 						: "@ApiResponse({\n\t\tstatus: 200,\n\t\ttype: {_@modelNameCapitalize@_}DeleteResponse,\n\t})",
 				)
 				.replace(
 					/{__@useResultDataVoListRes@__}/g,
 					useResultDataVo
-						? "@ApiResult({_@modelNameCapitalize@_}ListResponse)"
+						? "@ApiResult({_@modelNameCapitalize@_}ListResponse,true,true)"
 						: "@ApiResponse({\n\t\tstatus: 200,\n\t\ttype: {_@modelNameCapitalize@_}ListResponse,\n\t})",
 				)
 				.replaceAll(/{_@modelName@_}/g, modelNameCamelize)

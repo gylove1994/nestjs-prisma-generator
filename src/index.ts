@@ -86,7 +86,12 @@ program
 				ans.useResultDataVo,
 			);
 			generateNestDtoFile(prisma, answers.outputPath, answers.dryRun);
-			generateNestTypesFile(prisma, answers.outputPath, answers.dryRun);
+			generateNestTypesFile(
+				prisma,
+				answers.outputPath,
+				answers.dryRun,
+				ans.useResultDataVo,
+			);
 			generateServiceFile(
 				prisma,
 				answers.outputPath,
@@ -113,7 +118,12 @@ program
 				ans.useResultDataVo,
 			);
 			generateNestDtoFile(prisma, answers.outputPath, answers.dryRun);
-			generateNestTypesFile(prisma, answers.outputPath, answers.dryRun);
+			generateNestTypesFile(
+				prisma,
+				answers.outputPath,
+				answers.dryRun,
+				ans.useResultDataVo,
+			);
 			generateServiceFile(
 				prisma,
 				answers.outputPath,
@@ -147,7 +157,7 @@ program
 			generateNestModuleFile(prisma, outputPath, dryRun);
 			generateNestControllerFile(prisma, outputPath, dryRun, resultDataVo);
 			generateNestDtoFile(prisma, outputPath, dryRun);
-			generateNestTypesFile(prisma, outputPath, dryRun);
+			generateNestTypesFile(prisma, outputPath, dryRun, resultDataVo);
 			generateServiceFile(prisma, outputPath, dryRun, resultDataVo);
 		} else if (type === "all") {
 			generateEnumFile(prisma, outputPath, dryRun);
@@ -156,7 +166,7 @@ program
 			generateNestModuleFile(prisma, outputPath, dryRun);
 			generateNestControllerFile(prisma, outputPath, dryRun, resultDataVo);
 			generateNestDtoFile(prisma, outputPath, dryRun);
-			generateNestTypesFile(prisma, outputPath, dryRun);
+			generateNestTypesFile(prisma, outputPath, dryRun, resultDataVo);
 			generateServiceFile(prisma, outputPath, dryRun, resultDataVo);
 		}
 		console.log(`${chalk.green("SUCCESS")} ${mkFileCount} files created 🔥`);

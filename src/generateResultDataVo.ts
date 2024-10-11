@@ -65,7 +65,7 @@ export const ApiResult = <TModel extends Type<any>>(
 		prop = {
 			type: "object",
 			properties: {
-				data: {
+				list: {
 					type: "array",
 					items,
 				},

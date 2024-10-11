@@ -45,11 +45,13 @@ export class {_@modelNameCapitalize@_}Service {
   }
 
   async list(dto: Pagination{_@modelNameCapitalize@_}Dto): Promise<unknown> {
+	const { page, pageSize, ...rest } = dto;
     const res = await this.prisma.{_@modelName@_}.findMany({
-      take: dto.pageSize,
-      skip: (dto.page - 1) * dto.pageSize,
+      take: pageSize,
+      skip: (page - 1) * pageSize,
     });
-    {__@returnResultDataVo@__}
+		const total = await this.prisma.{_@modelName@_}.count();
+    {__@returnResultDataVoList@__}
   }
 }
 `;
@@ -79,6 +81,12 @@ export function generateService(model: Schema, useResultDataVo: boolean) {
 						/{__@returnResultDataVo@__}/g,
 						useResultDataVo
 							? "return ResultDataVo.ok({data: res});"
+							: "return res;",
+					)
+					.replace(
+						/{__@returnResultDataVoList@__}/g,
+						useResultDataVo
+							? "return ResultDataVo.ok({data: { list:res, total, page, pageSize }});"
 							: "return res;",
 					),
 			};
