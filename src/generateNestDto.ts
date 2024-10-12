@@ -1,13 +1,13 @@
 import { strings } from "@angular-devkit/core";
-import type { Model, Schema } from "@mrleebo/prisma-ast";
+import type { Field, Model, Schema } from "@mrleebo/prisma-ast";
 import { createdEnumMap } from "./generateEnum";
 import { getRelation } from "./utils/getRelation";
 import { importFile, importJsonValue } from "./utils/import";
 import { mkFile } from "./utils/mkFile";
-import { dtoPropertyMap } from "./utils/propertyMap";
+import { dtoPropertyMap, paginationDtoPropertyMap } from "./utils/propertyMap";
 
 const dtoTemplate = `
-import { ApiProperty, IntersectionType, OmitType, PartialType } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, IntersectionType, OmitType, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsNumber, IsDate, IsBoolean, IsArray, IsObject, IsOptional, IsEnum, Min, Max } from 'class-validator';
 import { Transform } from 'class-transformer';
 {_@imports@_}
@@ -33,6 +33,8 @@ export class Pagination{_@modelNameCapitalize@_}Dto {
 	}, { message: '当前页必须是整数' })
 	@Min(1, { message: '当前页必须大于0' })
   page: number;
+
+{_@PaginationFields@_}
 }
 
 export class {_@modelNameCapitalize@_}IdExistDto {
@@ -49,8 +51,11 @@ export class {_@modelNameCapitalize@_}CreateDto {
 {_@CreateDtoFields@_}
 }
 
-export class {_@modelNameCapitalize@_}UpdateDto extends IntersectionType({_@modelNameCapitalize@_}IdExistDto, OmitType(PartialType({_@modelNameCapitalize@_}CreateDto), [])) {}
-
+export class {_@modelNameCapitalize@_}UpdateDto extends IntersectionType(
+	{_@modelNameCapitalize@_}IdExistDto,
+	// OmitType(PartialType({_@modelNameCapitalize@_}CreateDto), []),
+	PartialType({_@modelNameCapitalize@_}CreateDto),
+) {}
 `;
 
 export function generateNestDto(model: Schema) {
@@ -75,12 +80,17 @@ export function generateNestDto(model: Schema) {
 				})
 				.filter((v) => v !== "")
 				.join("\n");
+			const paginationFields = v.properties
+				.filter((v) => v.type === "field")
+				.map((v, _i, array) => paginationDtoPropertyMap(v, array))
+				.join("\n");
 			return {
 				name: `${modelNameCamelize}`,
 				content: dtoTemplate
 					.replaceAll("{_@modelName@_}", modelNameCamelize)
 					.replaceAll("{_@modelNameCapitalize@_}", modelNameCapitalize)
 					.replaceAll("{_@CreateDtoFields@_}", createdDtoField)
+					.replaceAll("{_@PaginationFields@_}", paginationFields)
 					.replaceAll("{_@imports@_}", imports.join("\n")),
 			};
 		});

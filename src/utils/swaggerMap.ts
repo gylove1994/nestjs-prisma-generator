@@ -18,7 +18,7 @@ export function swaggerMap(field: Field, setOption?: SwaggerMapOption) {
 	const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
 	if (createdEnumMap.has(type) || createdEnumMap.has(capitalizedType)) {
 		return `@ApiProperty({ enum: ${capitalizedType}, description: "${
-			field.comment || ""
+			setOption?.setDescription || field.comment || ""
 		}", isArray: ${field.array || false}, required: ${
 			field.optional || true
 		} })\n`;
@@ -27,7 +27,7 @@ export function swaggerMap(field: Field, setOption?: SwaggerMapOption) {
 		setOption?.setType !== undefined
 			? setOption.setType
 			: swaggerTypeMap(field.fieldType)
-	}, description: "${field.comment || ""}", isArray: ${
+	}, description: "${setOption?.setDescription || field.comment || ""}", isArray: ${
 		setOption?.setArray !== undefined
 			? setOption.setArray
 			: field.array !== undefined

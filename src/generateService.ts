@@ -6,6 +6,7 @@ import { mkFile } from "./utils/mkFile";
 const serviceTemplate = `
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
+import { Prisma } from "@prisma/client";
 import type { {_@modelNameCapitalize@_}IdExistDto, {_@modelNameCapitalize@_}CreateDto, {_@modelNameCapitalize@_}UpdateDto, Pagination{_@modelNameCapitalize@_}Dto } from './{_@modelName@_}.dtos';
 {__@importResultDataVo@__}
 
@@ -25,7 +26,7 @@ export class {_@modelNameCapitalize@_}Service {
 
   async create(dto: {_@modelNameCapitalize@_}CreateDto): Promise<unknown> {
     const { {_@CreateDtoIdFields@_} ...rest} = dto;
-    const data = {
+    const data: Prisma.{_@modelNameCapitalize@_}CreateArgs["data"] = {
       ...rest,
 {_@CreateDtoFields@_}
     };
@@ -34,13 +35,19 @@ export class {_@modelNameCapitalize@_}Service {
   }
 
   async update(dto: {_@modelNameCapitalize@_}UpdateDto): Promise<unknown> {
-    const { id, ...data } = dto;
+    const { id, {_@CreateDtoIdFields@_} ...rest } = dto;
+		const data: Prisma.{_@modelNameCapitalize@_}UpdateArgs["data"] = {
+			...rest,
+{_@UpdateDtoFields@_}
+		};
     const res = await this.prisma.{_@modelName@_}.update({ where: { id }, data });
     {__@returnResultDataVo@__}
   }
 
+
   async delete(dto: {_@modelNameCapitalize@_}IdExistDto): Promise<unknown> {
-    const res = await this.prisma.{_@modelName@_}.delete({ where: { id: dto.id } });
+    await this.prisma.{_@modelName@_}.delete({ where: { id: dto.id } });
+		const res = "success";
     {__@returnResultDataVo@__}
   }
 
@@ -64,6 +71,7 @@ export function generateService(model: Schema, useResultDataVo: boolean) {
 			const modelNameCapitalize = strings.capitalize(modelNameCamelize);
 			const createDtoFields = generateCreateDtoFields(v);
 			const createDtoIdFields = generateCreateDtoIdFields(v);
+			const updateDtoFields = generateUpdateDtoFields(v);
 			return {
 				name: `${modelNameCamelize}`,
 				content: serviceTemplate
@@ -71,6 +79,7 @@ export function generateService(model: Schema, useResultDataVo: boolean) {
 					.replace(/{_@modelNameCapitalize@_}/g, modelNameCapitalize)
 					.replace(/{_@CreateDtoFields@_}/g, createDtoFields)
 					.replace(/{_@CreateDtoIdFields@_}/g, createDtoIdFields)
+					.replace(/{_@UpdateDtoFields@_}/g, updateDtoFields)
 					.replace(
 						/{__@importResultDataVo@__}/g,
 						useResultDataVo
@@ -122,6 +131,28 @@ export function generateCreateDtoFields(model: Model) {
 				if (v.optional === true) {
 					res = `...(${relation}Id !== null && ${relation}Id !== undefined) ? {${res}} : {},`;
 				}
+			}
+			return res;
+		});
+	return list
+		.filter((v) => v !== null)
+		.map((v) => `\t\t\t${v}`)
+		.join("\n");
+}
+
+export function generateUpdateDtoFields(model: Model) {
+	const list = model.properties
+		.filter((v) => v.type === "field")
+		.map((v) => {
+			const relationMap = getRelationMap(model, true);
+			const relation = relationMap.get(v.fieldType as string);
+			let res = null;
+			if (relation && v.array === true) {
+				res = `${relation}: {set: ${relation}Ids?.map((id) => ({ id }))}`;
+				res = `...(${relation}Ids !== null && ${relation}Ids !== undefined) ? {${res}} : {},`;
+			} else if (relation) {
+				res = `${relation}: {connect: {id: ${relation}Id}}`;
+				res = `...(${relation}Id !== null && ${relation}Id !== undefined) ? {${res}} : {},`;
 			}
 			return res;
 		});

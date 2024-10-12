@@ -1,7 +1,11 @@
 import { strings } from "@angular-devkit/core";
 import { createdEnumMap } from "../generateEnum";
 
-export function importFile(importName: string, useRelativePath = false) {
+export function importFile(
+	importName: string,
+	useRelativePath = false,
+	withNoRelation = false,
+) {
 	if (importName === "JsonValue") {
 		return `import { JsonValue } from "@prisma/client/runtime/library";\n`;
 	}
@@ -11,7 +15,11 @@ export function importFile(importName: string, useRelativePath = false) {
 	) {
 		return `import { ${importName} } from "${useRelativePath ? "@entity/" : "./"}${strings.camelize(importName)}Enum";\n`;
 	}
-	return `import { ${importName} } from "${useRelativePath ? "@entity/" : "./"}${strings.camelize(importName)}Entity";\n`;
+	return `import { ${importName} ${
+		withNoRelation ? `, ${importName}NoRelation` : ""
+	} } from "${useRelativePath ? "@entity/" : "./"}${strings.camelize(
+		importName,
+	)}Entity";\n`;
 }
 
 export function importApiProperty() {

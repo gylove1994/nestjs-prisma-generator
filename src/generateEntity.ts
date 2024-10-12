@@ -1,6 +1,7 @@
 import { strings } from "@angular-devkit/core";
 import { classify } from "@angular-devkit/core/src/utils/strings";
 import type { Model, Schema } from "@mrleebo/prisma-ast";
+import { createdEnumMap } from "./generateEnum";
 import { getRelation } from "./utils/getRelation";
 import {
 	importApiProperty,
@@ -9,7 +10,7 @@ import {
 	importPickType,
 } from "./utils/import";
 import { mkFile } from "./utils/mkFile";
-import { propertyMap } from "./utils/propertyMap";
+import { noRelationPropertyMap, propertyMap } from "./utils/propertyMap";
 import { swaggerMap } from "./utils/swaggerMap";
 
 export function generateEntity(model: Model) {
@@ -23,13 +24,13 @@ export function generateEntity(model: Model) {
 		(prop) => prop.type === "field" && prop.fieldType === "Json",
 	);
 	const imports = getRelation(model)
-		.map((v) => importFile(v))
+		.map((v) => importFile(v, false, true))
 		.concat(importApiProperty())
 		.concat(hasJson ? importJsonValue() : "")
 		.join("");
 	const content = `${imports}\nexport class ${strings.classify(
 		model.name,
-	)} {\n${propertiesContent}}\n\n${generateEntityRelationSeparateClass(model)}\n${generateEntityNoRelationClass(model)}`;
+	)} {\n${propertiesContent}}\n\n${generateEntityRelationSeparateClass(model)}\n\n${generateEntityRelationSeparateNoRelationClass(model)}\n\n${generateEntityNoRelationClass(model)}`;
 	return {
 		name: `${strings.camelize(model.name)}Entity.ts`,
 		content,
@@ -40,11 +41,34 @@ export function generateEntityRelationSeparateClass(model: Model) {
 	const relationsName = getRelation(model);
 	const relations = model.properties
 		.filter(
-			(v: any) => v.type === "field" && relationsName.includes(v.fieldType),
+			(v: any) =>
+				v.type === "field" &&
+				relationsName.includes(v.fieldType) &&
+				!createdEnumMap.has(v.fieldType),
 		)
 		.map(
 			(v: any) =>
 				`export class ${strings.classify(`${model.name}Relation${v.fieldType}`)}{\n${swaggerMap(v) + propertyMap(v)}}\n`,
+		);
+	return relations.join("\n");
+}
+
+export function generateEntityRelationSeparateNoRelationClass(model: Model) {
+	const relationsName = getRelation(model);
+	const relations = model.properties
+		.filter(
+			(v: any) =>
+				v.type === "field" &&
+				relationsName.includes(v.fieldType) &&
+				!createdEnumMap.has(v.fieldType),
+		)
+		.map(
+			(v: any) =>
+				`export class ${strings.classify(`${model.name}Relation${v.fieldType}NoRelation`)}{\n${
+					swaggerMap(v, {
+						setType: `${v.fieldType}NoRelation`,
+					}) + noRelationPropertyMap(v)
+				}}\n`,
 		);
 	return relations.join("\n");
 }
