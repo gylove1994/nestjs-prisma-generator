@@ -69,20 +69,7 @@ export function dtoPropertyMap(field: Field, array: Field[]) {
 
 export function paginationDtoPropertyMap(field: Field, array: Field[]) {
 	if (field.type === "field" && field.fieldType === "DateTime") {
-		const isNow = field.attributes?.find(
-			(v) =>
-				v.name === "default" &&
-				v.type === "attribute" &&
-				v.args?.[0].type === "attributeArgument" &&
-				isFunc(v.args?.[0].value) &&
-				v.args?.[0].value.name === "now",
-		);
-		const isUpdatedAt = !!field.attributes?.find(
-			(v) => v.type === "attribute" && v.name === "updatedAt",
-		);
-		if (isNow || isUpdatedAt) {
-			return `@IsDate({ each: true, message: "${field.name} 类型错误，请传入 Date[] 类型" })\n@Transform(({ value }) => Array.isArray(value) ? value.map((v) => new Date(v)).sort((a, b) => a.getTime() - b.getTime()) 	: new Date(value))\n@IsOptional()\n@ApiPropertyOptional({ type: [Date], description: "搜索条件：${field.name}，小的为开始时间，大的为结束时间" })\n${field.name}${field.optional ? "?" : ""}: Date[] | null\n`;
-		}
+		return `@IsDate({ each: true, message: "${field.name} 类型错误，请传入 Date[] 类型" })\n@Transform(({ value }) => Array.isArray(value) ? value.map((v) => new Date(v)).sort((a, b) => a.getTime() - b.getTime()) 	: new Date(value))\n@IsOptional()\n@ApiPropertyOptional({ type: [Date], description: "搜索条件：${field.name}，小的为开始时间，大的为结束时间" })\n${field.name}?: Date[] | null\n`;
 	}
 	const isId = !!field.attributes?.find(
 		(v) => v.type === "attribute" && v.name === "id",
@@ -96,12 +83,13 @@ export function paginationDtoPropertyMap(field: Field, array: Field[]) {
 			return v.name === `${field.name}Id`;
 		}) ?? false;
 	if (isRelation && field.array === true) {
-		return `${swaggerMap(field, { setType: "String", setArray: true, setRequired: false, setDescription: `搜索条件：${field.name}Ids，搜索模式为精确匹配，搜索包含所有Id的项目` })}@IsString({ each: true, message: "${field.name}Ids 类型错误，请传入 string[] 类型" })\n//@IsUUID("4", { each: true, message: "${field.name}Ids 类型错误，请传入 uuid[] 类型" })\n@IsOptional()\n${field.name}Ids${field.optional ? "?" : ""}: string[] | null\n`;
+		return `${swaggerMap(field, { setType: "String", setArray: true, setRequired: false, setDescription: `搜索条件：${field.name}Ids，搜索模式为精确匹配，搜索包含所有Id的项目` })}@IsString({ each: true, message: "${field.name}Ids 类型错误，请传入 string[] 类型" })\n//@IsUUID("4", { each: true, message: "${field.name}Ids 类型错误，请传入 uuid[] 类型" })\n@IsOptional()\n${field.name}Ids?: string[] | null\n`;
 	}
 	if (isRelation && hasRelationId) {
 		return "";
 	}
-	return `${swaggerMap(field, { setRequired: false, setDescription: `搜索条件：${field.name}，搜索模式为模糊匹配` })}${classValidatorMap(
+	return `${swaggerMap(field, { setRequired: false, setDescription: `搜索条件：${field.name}，${field.name.endsWith("Id") ? "搜索模式为精确匹配" : "搜索模式为模糊匹配"}` })}${classValidatorMap(
 		field,
+		{ setOptional: true },
 	)}${field.name}?: ${typeMap(field.fieldType)} | null\n`;
 }
