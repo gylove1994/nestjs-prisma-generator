@@ -101,9 +101,7 @@ export function paginationDtoPropertyMap(field: Field, array: Field[]) {
 	if (isRelation && hasRelationId) {
 		return "";
 	}
-	return `${swaggerMap(field, { setRequired: !field.optional, setDescription: `搜索条件：${field.name}，搜索模式为模糊匹配` })}${classValidatorMap(
+	return `${swaggerMap(field, { setRequired: false, setDescription: `搜索条件：${field.name}，搜索模式为模糊匹配` })}${classValidatorMap(
 		field,
-	)}${field.name}${field.optional ? "?" : ""}: ${typeMap(
-		field.fieldType,
-	)} ${field.optional ? "| null" : ""}\n`;
+	)}${field.name}?: ${typeMap(field.fieldType)} | null\n`;
 }
