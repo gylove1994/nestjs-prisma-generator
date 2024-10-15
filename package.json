@@ -1,6 +1,6 @@
 {
 	"name": "@gylove1994/npg",
-	"version": "0.3.2",
+	"version": "0.3.3",
 	"description": "A command-line tool for generating NestJS code form schema.prisma file.",
 	"main": "dist/index.js",
 	"scripts": {
@@ -8,8 +8,7 @@
 		"lint": "biome check --write ./",
 		"dev": "nodemon --watch src --ext ts --exec \"rimraf dist && tsc && cp .env dist\"",
 		"build": "rimraf dist && tsc",
-		"prepublish": "npm run build",
-		"publish": "npm publish --access public"
+		"prepublish": "npm run build"
 	},
 	"files": ["dist", "README.md", "LICENSE", "bin"],
 	"bin": {

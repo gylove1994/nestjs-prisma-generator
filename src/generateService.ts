@@ -1,7 +1,8 @@
 import { strings } from "@angular-devkit/core";
-import type { Model, Schema } from "@mrleebo/prisma-ast";
+import type { Field, Model, Schema } from "@mrleebo/prisma-ast";
 import { getRelation, getRelationMap } from "./utils/getRelation";
 import { mkFile } from "./utils/mkFile";
+import { isFunc } from "./utils/propertyMap";
 
 const serviceTemplate = `
 import { Injectable } from '@nestjs/common';
@@ -56,6 +57,9 @@ export class {_@modelNameCapitalize@_}Service {
     const res = await this.prisma.{_@modelName@_}.findMany({
       take: pageSize,
       skip: (page - 1) * pageSize,
+			where: {
+{_@PaginationWhere@_}
+			}
     });
 		const total = await this.prisma.{_@modelName@_}.count();
     {__@returnResultDataVoList@__}
@@ -72,6 +76,7 @@ export function generateService(model: Schema, useResultDataVo: boolean) {
 			const createDtoFields = generateCreateDtoFields(v);
 			const createDtoIdFields = generateCreateDtoIdFields(v);
 			const updateDtoFields = generateUpdateDtoFields(v);
+			const paginationWhere = generatePaginationWhere(v);
 			return {
 				name: `${modelNameCamelize}`,
 				content: serviceTemplate
@@ -80,6 +85,7 @@ export function generateService(model: Schema, useResultDataVo: boolean) {
 					.replace(/{_@CreateDtoFields@_}/g, createDtoFields)
 					.replace(/{_@CreateDtoIdFields@_}/g, createDtoIdFields)
 					.replace(/{_@UpdateDtoFields@_}/g, updateDtoFields)
+					.replace(/{_@PaginationWhere@_}/g, paginationWhere)
 					.replace(
 						/{__@importResultDataVo@__}/g,
 						useResultDataVo
@@ -160,6 +166,63 @@ export function generateUpdateDtoFields(model: Model) {
 		.filter((v) => v !== null)
 		.map((v) => `\t\t\t${v}`)
 		.join("\n");
+}
+
+export function generatePaginationWhere(model: Model) {
+	const relationMap = getRelationMap(model, true);
+	const isNow = (field: Field) =>
+		field.attributes?.find(
+			(v) =>
+				v.name === "default" &&
+				v.type === "attribute" &&
+				v.args?.[0].type === "attributeArgument" &&
+				isFunc(v.args?.[0].value) &&
+				v.args?.[0].value.name === "now",
+		);
+	const isUpdatedAt = (field: Field) =>
+		!!field.attributes?.find(
+			(v) => v.type === "attribute" && v.name === "updatedAt",
+		);
+	const manyRelation = model.properties
+		.filter((v) => v.type === "field")
+		.filter((v) => v.array === true && relationMap.get(v.fieldType as string))
+		.map((v) => {
+			return `...(rest.${relationMap.get(v.fieldType as string)}Ids !== null && rest.${relationMap.get(v.fieldType as string)}Ids !== undefined ? {${relationMap.get(v.fieldType as string)}: { every: { id: { in: rest.${relationMap.get(v.fieldType as string)}Ids.filter((id) => id !== '') } } } } : {}),`;
+		});
+	const oneRelation = model.properties
+		.filter((v) => v.type === "field")
+		.filter((v) => !v.array === true && relationMap.get(v.fieldType as string))
+		.map((v) => {
+			return `...(rest.${relationMap.get(v.fieldType as string)}Id !== null && rest.${relationMap.get(v.fieldType as string)}Id !== undefined && rest.${relationMap.get(v.fieldType as string)}Id !== '' ? {${relationMap.get(v.fieldType as string)}: { id: rest.${relationMap.get(v.fieldType as string)}Id } } : {}),`;
+		});
+	const now = model.properties
+		.filter((v) => v.type === "field")
+		.filter((v) => isNow(v))
+		.map(
+			(v) => `${v.name}: { gte: rest.${v.name}[0], lte: rest.${v.name}[1] },`,
+		);
+	const updatedAt = model.properties
+		.filter((v) => v.type === "field")
+		.filter((v) => isUpdatedAt(v))
+		.map(
+			(v) => `${v.name}: { gte: rest.${v.name}[0], lte: rest.${v.name}[1] },`,
+		);
+	const string = model.properties
+		.filter((v) => v.type === "field")
+		.filter((v) => v.fieldType === "String")
+		.filter((v) => v.name !== "id")
+		.map(
+			(v) =>
+				`...(rest.${v.name} !== null && rest.${v.name} !== undefined && rest.${v.name} !== '' ? {${v.name}: { contains: rest.${v.name} } } : {}),`,
+		);
+	return [
+		"\t\t\t\t",
+		...manyRelation,
+		...oneRelation,
+		...now,
+		...updatedAt,
+		...string,
+	].join("\n\t\t\t\t");
 }
 
 export function generateCreateDtoIdFields(model: Model) {
