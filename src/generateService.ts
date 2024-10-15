@@ -200,14 +200,14 @@ export function generatePaginationWhere(model: Model) {
 		.filter((v) => isNow(v))
 		.map(
 			(v) =>
-				`${v.name}: ...(rest.${v.name} !== null && rest.${v.name} !== undefined ? { gte: rest.${v.name}[0], lte: rest.${v.name}[1] } : {}),`,
+				`...(rest.${v.name} !== null && rest.${v.name} !== undefined ? {${v.name}: { gte: rest.${v.name}[0], lte: rest.${v.name}[1] } } : {}),`,
 		);
 	const updatedAt = model.properties
 		.filter((v) => v.type === "field")
 		.filter((v) => isUpdatedAt(v))
 		.map(
 			(v) =>
-				`${v.name}: ...(rest.${v.name} !== null && rest.${v.name} !== undefined ? { gte: rest.${v.name}[0], lte: rest.${v.name}[1] } : {}),`,
+				`...(rest.${v.name} !== null && rest.${v.name} !== undefined ? {${v.name}: { gte: rest.${v.name}[0], lte: rest.${v.name}[1] } } : {}),`,
 		);
 	const string = model.properties
 		.filter((v) => v.type === "field")
