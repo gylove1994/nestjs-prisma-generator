@@ -20,7 +20,11 @@ export function swaggerMap(field: Field, setOption?: SwaggerMapOption) {
 		return `@ApiProperty({ enum: ${capitalizedType}, description: "${
 			setOption?.setDescription || field.comment || ""
 		}", isArray: ${field.array || false}, required: ${
-			field.optional || true
+			setOption?.setRequired !== undefined
+				? setOption.setRequired
+				: field.optional !== undefined
+					? field.optional === false
+					: true
 		} })\n`;
 	}
 	return `@ApiProperty({ ${setOption?.isEnum ? "enum: " : "type: "}${

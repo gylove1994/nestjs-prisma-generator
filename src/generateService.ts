@@ -8,6 +8,7 @@ const serviceTemplate = `
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Prisma } from "@prisma/client";
+import { InternalServerErrorException } from '@nestjs/common';
 import type { {_@modelNameCapitalize@_}IdExistDto, {_@modelNameCapitalize@_}CreateDto, {_@modelNameCapitalize@_}UpdateDto, Pagination{_@modelNameCapitalize@_}Dto } from './{_@modelName@_}.dtos';
 {__@importResultDataVo@__}
 
@@ -47,9 +48,14 @@ export class {_@modelNameCapitalize@_}Service {
 
 
   async delete(dto: {_@modelNameCapitalize@_}IdExistDto): Promise<unknown> {
-    await this.prisma.{_@modelName@_}.delete({ where: { id: dto.id } });
-		const res = "success";
-    {__@returnResultDataVo@__}
+		try {
+			await this.prisma.{_@modelName@_}.delete({ where: { id: dto.id } });
+			const res = "success";
+			{__@returnResultDataVo@__}
+		} catch (error) {
+			console.error(error);
+			throw new InternalServerErrorException("删除失败,可能存在关联数据，请检查");
+		}
   }
 
   async list(dto: Pagination{_@modelNameCapitalize@_}Dto): Promise<unknown> {

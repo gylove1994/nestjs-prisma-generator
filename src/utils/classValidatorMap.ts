@@ -14,7 +14,7 @@ export function classValidatorMap(
 				}${field.array ? "each: true" : ""}})\n${
 					optional ? "@IsOptional()\n" : ""
 				}${field.array ? `@IsArray({message: "${field.name} 类型错误，请传入 ${typeMap(field.fieldType)}[] 类型"})\n` : ""}`
-			: `${type}({enum: ${field.fieldType} ,message: "${field.name} 类型错误，请传入 ${typeMap(field.fieldType)} 类型"})\n${optional ? "@IsOptional()\n" : ""}${field.array ? `@IsArray({message: "${field.name} 类型错误，请传入 ${typeMap(field.fieldType)}[] 类型"})\n` : ""}`
+			: `${type}(${field.fieldType},{message: "${field.name} 类型错误，请传入 ${typeMap(field.fieldType)} 类型"})\n${optional ? "@IsOptional()\n" : ""}${field.array ? `@IsArray({message: "${field.name} 类型错误，请传入 ${typeMap(field.fieldType)}[] 类型"})\n` : ""}`
 	}`;
 	return res;
 }
