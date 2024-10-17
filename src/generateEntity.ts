@@ -77,7 +77,7 @@ export function generateEntityNoRelationClass(model: Model) {
 	const propertiesContent = model.properties
 		.filter(
 			(v: any) =>
-				v.type === "field" && !getRelation(model).includes(v.fieldType),
+				v.type === "field" && !getRelation(model, true).includes(v.fieldType),
 		)
 		.map((prop: any) => swaggerMap(prop) + propertyMap(prop))
 		.join("\n");
