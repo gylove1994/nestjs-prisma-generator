@@ -67,9 +67,13 @@ export class {_@modelNameCapitalize@_}Service {
 {_@PaginationWhere@_}
 			}
     });
-		const total = await this.prisma.{_@modelName@_}.count();
-    {__@returnResultDataVoList@__}
-  }
+		const total = await this.prisma.{_@modelName@_}.count({
+			where: {
+{_@PaginationWhere@_}
+			}
+		});
+		{__@returnResultDataVoList@__}
+	}
 }
 `;
 
