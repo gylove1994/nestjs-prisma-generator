@@ -39,7 +39,7 @@
 		"inquirer": "^11.0.2"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.2",
+		"@biomejs/biome": "1.9.4",
 		"@nestjs/swagger": "^7.4.2",
 		"@types/fs-extra": "^11.0.4",
 		"lefthook": "^1.7.17",
