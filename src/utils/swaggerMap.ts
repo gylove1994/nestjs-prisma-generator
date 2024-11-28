@@ -27,7 +27,7 @@ export function swaggerMap(field: Field, setOption?: SwaggerMapOption) {
 					: true
 		} })\n`;
 	}
-	return `@ApiProperty({ ${setOption?.isEnum ? "enum: " : "type: "}${
+	return `@ApiProperty({ ${setOption?.isEnum ? "enum: " : "type: () => "}${
 		setOption?.setType !== undefined
 			? setOption.setType
 			: swaggerTypeMap(field.fieldType)
