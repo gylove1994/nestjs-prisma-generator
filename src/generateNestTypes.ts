@@ -36,7 +36,7 @@ export function generateNestTypes(prisma: Schema, useResultDataVo: boolean) {
 						: "",
 				)
 				.replaceAll(/{_@modelNameCapitalize@_}/g, strings.capitalize(name))
-				.replaceAll(/{_@modelName@_}/g, name);
+				.replaceAll(/{_@modelName@_}/g, strings.camelize(name));
 			return {
 				name: strings.camelize(name),
 				content,
