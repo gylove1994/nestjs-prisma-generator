@@ -32,10 +32,11 @@ export function generateNestTypes(prisma: Schema, useResultDataVo: boolean) {
 				.replace(
 					/{__@useResultDataVo@__}/g,
 					useResultDataVo
-						? "import { {_@modelNameCapitalize@_}NoRelation, {_@modelNameCapitalize@_} } from '@entity/{_@modelNameCapitalize@_}Entity';"
+						? "import { {_@modelNameCapitalize@_}NoRelation, {_@modelNameCapitalize@_} } from '@entity/{_@modelName@_}Entity';"
 						: "",
 				)
-				.replaceAll(/{_@modelNameCapitalize@_}/g, strings.capitalize(name));
+				.replaceAll(/{_@modelNameCapitalize@_}/g, strings.capitalize(name))
+				.replaceAll(/{_@modelName@_}/g, name);
 			return {
 				name: strings.camelize(name),
 				content,
