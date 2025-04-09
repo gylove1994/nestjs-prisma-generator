@@ -16,17 +16,17 @@ import type { {_@modelNameCapitalize@_}IdExistDto, {_@modelNameCapitalize@_}Crea
 export class {_@modelNameCapitalize@_}Service {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(): Promise<unknown> {
+  async findAll() {
     const res = await this.prisma.{_@modelName@_}.findMany();
     {__@returnResultDataVo@__}
   }
 
-  async findOne(dto: {_@modelNameCapitalize@_}IdExistDto): Promise<unknown> {
+  async findOne(dto: {_@modelNameCapitalize@_}IdExistDto) {
     const res = await this.prisma.{_@modelName@_}.findUnique({ where: { id: dto.id } });
     {__@returnResultDataVo@__}
   }
 
-  async create(dto: {_@modelNameCapitalize@_}CreateDto): Promise<unknown> {
+  async create(dto: {_@modelNameCapitalize@_}CreateDto) {
     const { {_@CreateDtoIdFields@_} ...rest} = dto;
     const data: Prisma.{_@modelNameCapitalize@_}CreateArgs["data"] = {
       ...rest,
@@ -36,7 +36,7 @@ export class {_@modelNameCapitalize@_}Service {
     {__@returnResultDataVo@__}
   }
 
-  async update(dto: {_@modelNameCapitalize@_}UpdateDto): Promise<unknown> {
+  async update(dto: {_@modelNameCapitalize@_}UpdateDto) {
     const { id, {_@CreateDtoIdFields@_} ...rest } = dto;
 		const data: Prisma.{_@modelNameCapitalize@_}UpdateArgs["data"] = {
 			...rest,
@@ -47,7 +47,7 @@ export class {_@modelNameCapitalize@_}Service {
   }
 
 
-  async delete(dto: {_@modelNameCapitalize@_}IdExistDto): Promise<unknown> {
+  async delete(dto: {_@modelNameCapitalize@_}IdExistDto) {
 		try {
 			await this.prisma.{_@modelName@_}.delete({ where: { id: dto.id } });
 			const res = "success";
@@ -58,19 +58,18 @@ export class {_@modelNameCapitalize@_}Service {
 		}
   }
 
-  async list(dto: Pagination{_@modelNameCapitalize@_}Dto): Promise<unknown> {
+  async list(dto: Pagination{_@modelNameCapitalize@_}Dto) {
 	const { page, pageSize, ...rest } = dto;
+	const where: Prisma.{_@modelNameCapitalize@_}WhereInput = {
+{_@PaginationWhere@_}
+	};
     const res = await this.prisma.{_@modelName@_}.findMany({
       take: pageSize,
       skip: (page - 1) * pageSize,
-			where: {
-{_@PaginationWhere@_}
-			}
-    });
+			where,
+		});
 		const total = await this.prisma.{_@modelName@_}.count({
-			where: {
-{_@PaginationWhere@_}
-			}
+			where,
 		});
 		{__@returnResultDataVoList@__}
 	}
@@ -105,13 +104,13 @@ export function generateService(model: Schema, useResultDataVo: boolean) {
 					.replace(
 						/{__@returnResultDataVo@__}/g,
 						useResultDataVo
-							? "return ResultDataVo.ok({data: res});"
+							? "return ResultDataVo.ok<typeof res>({data: res});"
 							: "return res;",
 					)
 					.replace(
 						/{__@returnResultDataVoList@__}/g,
 						useResultDataVo
-							? "return ResultDataVo.ok({data: { list:res, total, page, pageSize }});"
+							? "const data = { list:res, total, page, pageSize };\n\t\treturn ResultDataVo.ok<typeof data>({data});"
 							: "return res;",
 					),
 			};

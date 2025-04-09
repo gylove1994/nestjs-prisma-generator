@@ -5,8 +5,8 @@ import { ApiProperty } from "@nestjs/swagger";
 import { type Type, applyDecorators } from "@nestjs/common";
 import { ApiOkResponse, getSchemaPath } from "@nestjs/swagger";
 
-export class ResultDataVo {
-	constructor(resultData: { code?: number; message?: string; data?: any }) {
+export class ResultDataVo<T = any> {
+	constructor(resultData: { code?: number; message?: string; data?: T }) {
 		const { code = 200, message, data } = resultData;
 		this.code = code;
 		this.message = message ?? "ok";
@@ -25,26 +25,26 @@ export class ResultDataVo {
 		type: "string",
 		default: "ok",
 	})
-	message?: string;
+	message: string;
 
-	data?: any;
+	data: T;
 
-	static ok(resultData: {
+	static ok<T = any>(resultData: {
 		code?: number;
 		message?: string;
-		data?: any;
-	}): ResultDataVo {
+		data?: T;
+	}): ResultDataVo<T> {
 		const { code = 200, message = "ok", data } = resultData;
-		return new ResultDataVo({ code, message, data });
+		return new ResultDataVo<T>({ code, message, data });
 	}
 
-	static fail(resultData: {
+	static fail<T = any>(resultData: {
 		code?: number;
 		message?: string;
-		data?: any;
-	}): ResultDataVo {
-		const { code = 200, message = "fail", data } = resultData;
-		return new ResultDataVo({ code, message, data });
+		data?: T;
+	}): ResultDataVo<T> {
+		const { code = 500, message = "fail", data } = resultData;
+		return new ResultDataVo<T>({ code, message, data });
 	}
 }
 
